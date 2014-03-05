@@ -16,3 +16,48 @@ Request URL: /cakephp/
 Stack Trace:
 #0 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2014-03-05 13:45:12 Error: [MissingControllerException] Controller class BootstrapController could not be found.
+Exception Attributes: array (
+  'class' => 'BootstrapController',
+  'plugin' => NULL,
+)
+Request URL: /bootstrap/
+Stack Trace:
+#0 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2014-03-05 13:45:36 Error: [MissingControllerException] Controller class BootstrapController could not be found.
+Exception Attributes: array (
+  'class' => 'BootstrapController',
+  'plugin' => NULL,
+)
+Request URL: /bootstrap/summarizer/
+Stack Trace:
+#0 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2014-03-05 13:45:41 Error: [MissingControllerException] Controller class BootstrapController could not be found.
+Exception Attributes: array (
+  'class' => 'BootstrapController',
+  'plugin' => NULL,
+)
+Request URL: /bootstrap/summarizer/index.html
+Stack Trace:
+#0 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2014-03-05 14:20:31 Error: [MissingControllerException] Controller class AssetsController could not be found.
+Exception Attributes: array (
+  'class' => 'AssetsController',
+  'plugin' => NULL,
+)
+Request URL: /assets/ico/favicon.ico
+Stack Trace:
+#0 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2014-03-05 14:39:04 Error: [MissingControllerException] Controller class AssetsController could not be found.
+Exception Attributes: array (
+  'class' => 'AssetsController',
+  'plugin' => NULL,
+)
+Request URL: /assets/ico/favicon.ico
+Stack Trace:
+#0 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
