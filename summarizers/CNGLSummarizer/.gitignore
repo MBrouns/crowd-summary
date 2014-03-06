@@ -1,0 +1,8 @@
+.metadata/
+summarizer/.settings/
+summarizer/target/
+summarizer/docs/
+summarizer/.classpath
+summarizer/.project
+summarizer/src/main/java/ie/dcu/cngl/json
+summarizer/src/main/java/ie/dcu/cngl/server
