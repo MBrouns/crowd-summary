@@ -61,3 +61,70 @@ Request URL: /assets/ico/favicon.ico
 Stack Trace:
 #0 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2014-03-06 15:55:32 Error: [MissingControllerException] Controller class UsersController could not be found.
+Exception Attributes: array (
+  'class' => 'UsersController',
+  'plugin' => NULL,
+)
+Request URL: /users/login
+Stack Trace:
+#0 C:\websites\crowd-summary\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2014-03-06 15:56:39 Error: [MissingViewException] View file "C:\websites\crowd-summary\app\View\Users\index.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'C:\\websites\\crowd-summary\\app\\View\\Users\\index.ctp',
+)
+Request URL: /users/
+Stack Trace:
+#0 C:\websites\crowd-summary\lib\Cake\View\View.php(463): View->_getViewFileName(NULL)
+#1 C:\websites\crowd-summary\lib\Cake\Controller\Controller.php(952): View->render(NULL, NULL)
+#2 C:\websites\crowd-summary\lib\Cake\Routing\Dispatcher.php(192): Controller->render()
+#3 C:\websites\crowd-summary\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#4 C:\websites\crowd-summary\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2014-03-06 15:58:30 Error: [MissingViewException] View file "C:\websites\crowd-summary\app\View\Users\index.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'C:\\websites\\crowd-summary\\app\\View\\Users\\index.ctp',
+)
+Request URL: /users
+Stack Trace:
+#0 C:\websites\crowd-summary\lib\Cake\View\View.php(463): View->_getViewFileName(NULL)
+#1 C:\websites\crowd-summary\lib\Cake\Controller\Controller.php(952): View->render(NULL, NULL)
+#2 C:\websites\crowd-summary\lib\Cake\Routing\Dispatcher.php(192): Controller->render()
+#3 C:\websites\crowd-summary\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#4 C:\websites\crowd-summary\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2014-03-06 16:01:16 Error: Fatal Error (1): Class 'SimplePasswordHasher' not found in [C:\websites\crowd-summary\app\Model\User.php, line 32]
+2014-03-06 16:01:16 Error: [FatalErrorException] Class 'SimplePasswordHasher' not found
+Request URL: /users/add
+Stack Trace:
+#0 C:\websites\crowd-summary\lib\Cake\Error\ErrorHandler.php(203): ErrorHandler::handleFatalError(1, 'Class 'SimplePa...', 'C:\websites\cro...', 32)
+#1 [internal function]: ErrorHandler::handleError(1, 'Class 'SimplePa...', 'C:\websites\cro...', 32, Array)
+#2 C:\websites\crowd-summary\lib\Cake\Core\App.php(929): call_user_func('ErrorHandler::h...', 1, 'Class 'SimplePa...', 'C:\websites\cro...', 32, Array)
+#3 C:\websites\crowd-summary\lib\Cake\Core\App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2014-03-06 16:04:36 Error: [MissingViewException] View file "C:\websites\crowd-summary\app\View\Users\index.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'C:\\websites\\crowd-summary\\app\\View\\Users\\index.ctp',
+)
+Request URL: /users
+Stack Trace:
+#0 C:\websites\crowd-summary\lib\Cake\View\View.php(463): View->_getViewFileName(NULL)
+#1 C:\websites\crowd-summary\lib\Cake\Controller\Controller.php(952): View->render(NULL, NULL)
+#2 C:\websites\crowd-summary\lib\Cake\Routing\Dispatcher.php(192): Controller->render()
+#3 C:\websites\crowd-summary\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#4 C:\websites\crowd-summary\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2014-03-06 16:11:07 Error: [MissingViewException] View file "C:\websites\crowd-summary\app\View\Users\edit.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'C:\\websites\\crowd-summary\\app\\View\\Users\\edit.ctp',
+)
+Request URL: /users/edit/1
+Stack Trace:
+#0 C:\websites\crowd-summary\lib\Cake\View\View.php(463): View->_getViewFileName(NULL)
+#1 C:\websites\crowd-summary\lib\Cake\Controller\Controller.php(952): View->render(NULL, NULL)
+#2 C:\websites\crowd-summary\lib\Cake\Routing\Dispatcher.php(192): Controller->render()
+#3 C:\websites\crowd-summary\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#4 C:\websites\crowd-summary\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
