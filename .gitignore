@@ -8,6 +8,8 @@
 /build
 /dist
 /tags
+/app/webroot/phpliteadmin.php
+/app/webroot/phpliteadmin.config.php
 
 # OS generated files #
 ######################
@@ -19,3 +21,5 @@
 Icon?
 ehthumbs.db
 Thumbs.db
+/nbproject/private/
+/nbproject
