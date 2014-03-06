@@ -48,6 +48,6 @@ class AppController extends Controller {
     );
     
     public function beforeFilter() {
-        $this->Auth->allow('view', 'display');
+        $this->Auth->allow('display');//allow displaying pages for all users
     }
 }
