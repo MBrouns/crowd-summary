@@ -52,7 +52,7 @@ class User extends AppModel {
      */
 
     public function equaltofield($check, $otherfield) {
-//get name of field
+    //get name of field
         $fname = '';
         foreach ($check as $key => $value) {
             $fname = $key;

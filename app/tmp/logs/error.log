@@ -128,3 +128,60 @@ Stack Trace:
 #3 C:\websites\crowd-summary\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
 #4 C:\websites\crowd-summary\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #5 {main}
+2014-03-08 18:05:56 Error: [MissingControllerException] Controller class AssetsController could not be found.
+Exception Attributes: array (
+  'class' => 'AssetsController',
+  'plugin' => NULL,
+)
+Request URL: /assets/ico/favicon.ico
+Stack Trace:
+#0 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2014-03-08 18:08:09 Error: [MissingControllerException] Controller class Users.phpController could not be found.
+Exception Attributes: array (
+  'class' => 'Users.phpController',
+  'plugin' => NULL,
+)
+Request URL: /users.php
+Stack Trace:
+#0 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2014-03-08 18:13:57 Error: [MissingControllerException] Controller class UserController could not be found.
+Exception Attributes: array (
+  'class' => 'UserController',
+  'plugin' => NULL,
+)
+Request URL: /user/login
+Stack Trace:
+#0 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2014-03-08 19:29:57 Error: [MissingControllerException] Controller class SummaryController could not be found.
+Exception Attributes: array (
+  'class' => 'SummaryController',
+  'plugin' => NULL,
+)
+Request URL: /summary
+Stack Trace:
+#0 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2014-03-08 19:31:02 Error: [MissingViewException] View file "C:\wamp\www\app\View\Summary\index.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'C:\\wamp\\www\\app\\View\\Summary\\index.ctp',
+)
+Request URL: /summary
+Stack Trace:
+#0 C:\wamp\www\lib\Cake\View\View.php(463): View->_getViewFileName(NULL)
+#1 C:\wamp\www\lib\Cake\Controller\Controller.php(952): View->render(NULL, NULL)
+#2 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(192): Controller->render()
+#3 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(SummaryController), Object(CakeRequest), Object(CakeResponse))
+#4 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2014-03-08 19:36:42 Error: [MissingControllerException] Controller class DocumentController could not be found.
+Exception Attributes: array (
+  'class' => 'DocumentController',
+  'plugin' => NULL,
+)
+Request URL: /document
+Stack Trace:
+#0 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
