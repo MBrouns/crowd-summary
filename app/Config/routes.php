@@ -30,6 +30,8 @@
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 
+	Router::connect('/phpliteadmin.php', array('controller' => 'admin', 'action' => 'phplite'));
+
 /**
  * Load all plugin routes. See the CakePlugin documentation on
  * how to customize the loading of plugin routes.
