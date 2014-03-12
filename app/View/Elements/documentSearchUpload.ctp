@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-md-6"  style="padding-right:20px; border-right: 1px solid #aaa;">
 		<h2>Search for existing documents...</h2>
-		<form class="form-horizontal" role="form">
+		<form class="form-horizontal" role="form" action="/documents/index/">
 		  <div class="form-group">
 			<label for="inputAuthor" class="col-sm-2 control-label">Author</label>
 			<div class="col-sm-10">
@@ -29,7 +29,7 @@
 	</div>
 	<div  class="col-md-6">
 		<h2>...Or upload your own!</h2>
-		<form role="form">
+		<form role="form" action="/documents/index">
 		  <div class="form-group">
 			<input type="file" id="uploadSummary">
 			<p class="help-block">Choose an existing document on your hard disk.</p>

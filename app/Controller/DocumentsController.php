@@ -12,6 +12,11 @@ class DocumentsController extends AppController {
         
     }
 
+    public function summary($id) {
+        //temp var
+        $this->set('id', $id);
+    }
+
     
 
 }
