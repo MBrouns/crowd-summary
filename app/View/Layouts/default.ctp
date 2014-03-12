@@ -16,8 +16,9 @@
 
     echo $this->Html->css('bootstrap.min');
     echo $this->Html->css('jumbotron');
+    echo $this->Html->css('styles');
     ?>
-    
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <?php echo $this->Html->script('bootstrap.min'); ?>
     <?php echo $this->Html->script('scripts'); ?>
