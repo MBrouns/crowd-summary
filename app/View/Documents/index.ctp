@@ -1,7 +1,7 @@
 <?php
 echo $this->Html->script('jquery.tablesorter.min');
+echo $this->Html->script('jquery.tablesorter.widgets.min');
 ?>
-
 <br/>
 <div class="container">
 	<?php echo $this->element('documentSearchUpload'); ?>
@@ -27,9 +27,36 @@ echo $this->Html->script('jquery.tablesorter.min');
 </div>
 
 <script>
-$(document).ready(function()
-	{
-		$("#docTable").tablesorter();
-	}
-);
+$(document).ready($(function() {
+
+  var table = $('#docTable').tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      // use the filter_external option OR use bindSearch function (below)
+      // to bind external filters.
+      // filter_external : '.search',
+
+      filter_columnFilters: false,
+      filter_saveFilters : true,
+      filter_reset: '.reset'
+    }
+  });
+
+  // Target the $('.search') input using built in functioning
+  // this binds to the search using "search" and "keyup"
+  // Allows using filter_liveSearch or delayed search &
+  // pressing escape to cancel the search
+  $.tablesorter.filter.bindSearch( table, $('.search') );
+
+  // Basic search binding, alternate to the above
+  // bind to search - pressing enter and clicking on "x" to clear (Webkit)
+  // keyup allows dynamic searching
+  /*
+  $(".search").bind('search keyup', function (e) {
+    $('table').trigger('search', [ [this.value] ]);
+  });
+  */
+
+
+}));
 </script>
