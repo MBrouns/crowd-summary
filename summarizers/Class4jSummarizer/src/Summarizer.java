@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 import net.sf.classifier4J.Utilities;
 import net.sf.classifier4J.summariser.ISummariser;
-import net.sf.classifier4J.summariser.SimpleSummariser;
+
 /**
  * @author mbrouns
  *
@@ -34,12 +34,13 @@ public class Summarizer {
 				input = rs.getString("fulltext");
 			}
 		
-			ISummariser summariser = new SimpleSummariser();
+			ISummariser summariser = new CustomSummarizer();
 			int noOfLines = (int) Math.floor(Utilities.getSentences(input).length * 0.1);
 			String result = summariser.summarise(input, noOfLines);
 			String[] resultSentences = Utilities.getSentences(result);
 			for(String s: resultSentences){
 				System.out.println(s);
+				System.out.println(" ----------------------------- " );
 			}
 		}catch( Exception e){
 			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
