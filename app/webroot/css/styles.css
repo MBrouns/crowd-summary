@@ -12,3 +12,11 @@
 	background-color: #efefef;
 	text-align: justify;
 }
+
+#generate-button {
+	float: right;
+}
+
+.clearboth {
+	clear: both;
+}
