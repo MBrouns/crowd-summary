@@ -515,3 +515,111 @@ Request URL: /assets/ico/favicon.ico
 Stack Trace:
 #0 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2014-03-12 12:32:43 Error: [MissingActionException] Action UsersController::info() could not be found.
+Exception Attributes: array (
+  'controller' => 'UsersController',
+  'action' => 'info',
+)
+Request URL: /users/info
+Stack Trace:
+#0 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2014-03-12 12:32:46 Error: [MissingActionException] Action UsersController::info() could not be found.
+Exception Attributes: array (
+  'controller' => 'UsersController',
+  'action' => 'info',
+)
+Request URL: /users/info
+Stack Trace:
+#0 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2014-03-12 12:32:53 Error: [MissingActionException] Action UsersController::documents() could not be found.
+Exception Attributes: array (
+  'controller' => 'UsersController',
+  'action' => 'documents',
+)
+Request URL: /users/documents
+Stack Trace:
+#0 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2014-03-12 12:35:35 Error: [MissingActionException] Action UsersController::info() could not be found.
+Exception Attributes: array (
+  'controller' => 'UsersController',
+  'action' => 'info',
+)
+Request URL: /users/info
+Stack Trace:
+#0 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2014-03-12 12:36:20 Error: [MissingActionException] Action UsersController::new() could not be found.
+Exception Attributes: array (
+  'controller' => 'UsersController',
+  'action' => 'new',
+)
+Request URL: /users/new
+Stack Trace:
+#0 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2014-03-12 12:36:43 Error: [MissingActionException] Action UsersController::documents() could not be found.
+Exception Attributes: array (
+  'controller' => 'UsersController',
+  'action' => 'documents',
+)
+Request URL: /users/documents
+Stack Trace:
+#0 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2014-03-12 12:36:45 Error: [MissingActionException] Action UsersController::documents() could not be found.
+Exception Attributes: array (
+  'controller' => 'UsersController',
+  'action' => 'documents',
+)
+Request URL: /users/documents
+Stack Trace:
+#0 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2014-03-12 12:36:49 Error: [MissingActionException] Action UsersController::info() could not be found.
+Exception Attributes: array (
+  'controller' => 'UsersController',
+  'action' => 'info',
+)
+Request URL: /users/info
+Stack Trace:
+#0 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2014-03-12 12:37:56 Error: [MissingActionException] Action DocumentsController::documents() could not be found.
+Exception Attributes: array (
+  'controller' => 'DocumentsController',
+  'action' => 'documents',
+)
+Request URL: /documents/documents
+Stack Trace:
+#0 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\wamp\www\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(DocumentsController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2014-03-12 12:41:50 Error: [MissingControllerException] Controller class PhpliteadminController could not be found.
+Exception Attributes: array (
+  'class' => 'PhpliteadminController',
+  'plugin' => NULL,
+)
+Request URL: /phpliteadmin
+Stack Trace:
+#0 C:\wamp\www\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
