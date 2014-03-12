@@ -25,7 +25,7 @@ class DocumentsController extends AppController {
                 $this->Session->setFlash('Document could not be uploaded');
             }
         }
-
+        
         //Load arguments for document list filter
         if (isset($_POST["inputTitle"])) {
             $this->set('titleFilter', mysql_real_escape_string($_POST["inputTitle"]));
@@ -42,6 +42,9 @@ class DocumentsController extends AppController {
         } else {
             $this->set('contentFilter', '');
         }
+        
+        //get all documents
+        $this->set('documents', $this->Document->find('all'));
     }
 
     public function summary($id) {
