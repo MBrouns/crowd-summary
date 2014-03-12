@@ -1,0 +1,14 @@
+.summary-container {
+	width: 960px;
+	margin: 30px auto;
+}
+
+#summary {
+	width: 960px;
+	margin: 30px auto;
+	border: 1px solid #000;
+	border-radius: 3px;
+	padding: 20px;
+	background-color: #efefef;
+	text-align: justify;
+}
