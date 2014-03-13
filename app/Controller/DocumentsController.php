@@ -48,8 +48,16 @@ class DocumentsController extends AppController {
     }
 
     public function summary($id) {
+        $this->Document->id = $id;
+        if(!$this->Document->exists()){
+            throw new NotFoundException(__('Invalid document id'));
+        }
+
+        //display document
+        $this->set('document', $this->Document->read(null, $id));
+        
         //temp var
-        $this->set('id', $id);
+        //$this->set('id', $id);
     }
 
     /*

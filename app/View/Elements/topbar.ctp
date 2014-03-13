@@ -11,8 +11,8 @@
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li id="menu-documents"><a href="documents">Documents</a></li>
-        <li id="menu-info"><a href="info">Info</a></li>
+        <li id="menu-documents"><?php echo $this->Html->link('Documents', array('controller' => 'documents', 'action' => 'index')); ?></li>
+        <li id="menu-info"><?php echo $this->Html->link('Info', array('controller' => 'info', 'action' => 'index')); ?></li>
       </ul>
       <form class="navbar-form navbar-right" role="form">
         <div class="form-group">

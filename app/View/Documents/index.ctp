@@ -25,7 +25,7 @@ echo $this->Html->script('jquery.tablesorter.widgets.min');
                 <tr>
                     <td><?php echo $this->Html->link($document['Document']['title'], array('controller' => 'documents', 'action' => 'summary', $document['Document']['id'] )); ?></td>
                     <td><?php echo $document['Document']['author']; ?></td>
-                    <td><?php echo (isset($document['Document']['contributors']) ? $document['Document']['contributors'] : ''); ?></td>
+                    <td><?php echo (isset($document['Document']['contributions']) ? $document['Document']['contributions'] : ''); ?></td>
                     <td><?php echo $document['Document']['keywords']; ?></td>
                     <td><?php echo $document['Document']['created']; ?></td></tr>
 
