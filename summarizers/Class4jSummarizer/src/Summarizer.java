@@ -3,7 +3,9 @@
  */
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import net.sf.classifier4J.Utilities;
@@ -28,8 +30,19 @@ public class Summarizer {
 			c.setAutoCommit(false);
 			System.out.println("Database connection established");
 			
-			Statement selectFullTextStmt = c.createStatement();
-			ResultSet rs = selectFullTextStmt.executeQuery("Select [fulltext] FROM documents WHERE id = "+docID);
+			PreparedStatement sqlCheckDocumentSummarized = c.prepareStatement("Select [document_id] FROM sentences WHERE document_id = ?;");
+			sqlCheckDocumentSummarized.setInt(1, docID);
+			
+			ResultSet rsDocumentSummarized = sqlCheckDocumentSummarized.executeQuery();
+			while (rsDocumentSummarized.next()){
+				System.out.println("Document already summarized, aborting");
+				System.exit(1);
+			}
+			
+			PreparedStatement sqlSelectDocumentText = c.prepareStatement("Select [fulltext] FROM documents WHERE id = ?;");
+			sqlSelectDocumentText.setInt(1, docID);
+			
+			ResultSet rs = sqlSelectDocumentText.executeQuery();
 			while (rs.next()){
 				input = rs.getString("fulltext");
 			}
@@ -38,10 +51,33 @@ public class Summarizer {
 			int noOfLines = (int) Math.floor(Utilities.getSentences(input).length * 0.1);
 			String result = summariser.summarise(input, noOfLines);
 			String[] resultSentences = Utilities.getSentences(result);
+			System.out.println("Summary sentences found, inserting into database");
+			
 			for(String s: resultSentences){
-				System.out.println(s);
-				System.out.println(" ----------------------------- " );
+				PreparedStatement sqlAddSentence = c.prepareStatement("INSERT INTO sentences (document_id, sentence) VALUES (?, ?);", Statement.RETURN_GENERATED_KEYS);
+				sqlAddSentence.setInt(1, docID);
+				sqlAddSentence.setString(2, s);				
+				sqlAddSentence.execute();
+				
+				ResultSet generatedKeys = sqlAddSentence.getGeneratedKeys();
+				if(generatedKeys.next()){
+					try{
+					PreparedStatement sqlAddUserSentence = c.prepareStatement("INSERT INTO users_sentences (user_id, sentence_id, ranking) VALUES (0, ?, 1)");
+					sqlAddUserSentence.setInt(1, generatedKeys.getInt(1));
+					sqlAddUserSentence.execute();
+					}catch (Exception e){
+						e.printStackTrace();
+					}
+				}else{
+					throw new SQLException("Adding sentence failed");
+				}
+				
+				
 			}
+			System.out.println("Database insertion complete");
+		    c.commit();
+		    c.close();
+		    System.out.println("Database connection closed");
 		}catch( Exception e){
 			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 		    System.exit(0);
