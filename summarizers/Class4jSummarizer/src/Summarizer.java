@@ -8,8 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import net.sf.classifier4J.Utilities;
-
 /**
  * @author mbrouns
  *
@@ -66,9 +64,9 @@ public class Summarizer {
 			}
 		
 			CustomSummarizer summariser = new CustomSummarizer();
-			int noOfLines = (int) Math.floor(Utilities.getSentences(input).length * 0.1);
+			int noOfLines = (int) Math.floor(CustomSummarizer.getSentences(input).length * 0.1);
 			String result = summariser.summarise(input, noOfLines);
-			String[] resultSentences = Utilities.getSentences(result);
+			String[] resultSentences = CustomSummarizer.getSentences(result);
 			System.out.println("Summary sentences found, inserting into database");
 			
 			for(String s: resultSentences){

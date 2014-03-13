@@ -75,11 +75,18 @@ public class CustomSummarizer implements ISummariser {
      * @see net.sf.classifier4J.summariser.ISummariser#summarise(java.lang.String)
      */
     public String summarise(String input, int numSentences) {
-        return summariseInternal(input, numSentences, 3,  null);
+        return summariseInternal(input, numSentences, 5,  null);
     }
     
  
-
+    /**
+     * 
+     * @param input
+     * @param numSentences
+     * @param minWordsInSentence
+     * @param tokenizer
+     * @return
+     */
     protected String summariseInternal(String input, int numSentences, int minWordsInSentence, ITokenizer tokenizer) {
         // get the frequency of each word in the input
         @SuppressWarnings("rawtypes")
@@ -91,9 +98,9 @@ public class CustomSummarizer implements ISummariser {
         // workingSentences is used for the analysis, but
         // actualSentences is used in the results so that the 
         // capitalisation will be correct.      
-        String[] workingSentences = Utilities.getSentences(input.toLowerCase());
+        String[] workingSentences = getSentences(input.toLowerCase());
         
-        String[] actualSentences = Utilities.getSentences(input);
+        String[] actualSentences = getSentences(input);
         /*
         System.err.println("Sentences");
         for (int i = 0; i < actualSentences.length; i++) {
@@ -107,7 +114,7 @@ public class CustomSummarizer implements ISummariser {
         while (it.hasNext()) {
             String word = it.next();
             for (int i = 0; i < workingSentences.length; i++) {               
-                if (workingSentences[i].indexOf(word) >= 0) {
+                if (workingSentences[i].indexOf(word) >= 0 && workingSentences[i].split(" ").length >= minWordsInSentence) {
                     outputSentences.add(actualSentences[i]);
                     break;
                 }
@@ -161,6 +168,20 @@ public class CustomSummarizer implements ISummariser {
     }
 
 
+    /**
+     * 
+     * @param input a String which may contain many sentences
+     * @return an array of Strings, each element containing a sentence
+     */
+    public static String[] getSentences(String input) {
+        if (input == null) {
+            return new String[0];
+        } else {
+            // split on a ".", a "!", a "?" followed by a space or EOL
+            return input.split("((\\.|!|\\?)+(\\s|\\z))|((\r\n)|(\n))");
+        }
+
+    }
     
     /**
      * @see net.sf.classifier4J.summariser.ISummariser#getKeywords(java.lang.String, int)
