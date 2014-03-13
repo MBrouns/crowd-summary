@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import net.sf.classifier4J.Utilities;
-import net.sf.classifier4J.summariser.ISummariser;
 
 /**
  * @author mbrouns
@@ -23,22 +22,29 @@ public class Summarizer {
 	public static void main(String[] args) {
 		String input = null;
 		int docID = 0;
-		if (args.length > 0) {
+		String dbPath = null;
+		if (args.length > 1) {
 		    try {
 		    	docID = Integer.parseInt(args[0]);
 		    } catch (NumberFormatException e) {
 		        System.err.println("DocID must be an integer");
 		        System.exit(1);
 		    }
+		    try {
+		    	dbPath = args[1];
+		    } catch (Exception e) {
+		        System.err.println("dbPath must be an integer");
+		        System.exit(1);
+		    }
 		}else{
-			System.err.println("No DocID specified. Please provide it through a command line argument");
+			System.err.println("No DocID or dbPath specified. Please provide it through a command line argument");
 	        System.exit(1);
 		}
 		
 		Connection c = null;
 		try{
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:../../app/webroot/crowdsum");
+			c = DriverManager.getConnection("jdbc:sqlite:"+dbPath);
 			c.setAutoCommit(false);
 			System.out.println("Database connection established");
 			

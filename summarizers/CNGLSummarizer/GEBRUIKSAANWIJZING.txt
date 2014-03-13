@@ -1,9 +1,0 @@
-1. Zorg dat je Eclipse hebt met m2eclipse (of iets waarmee je Maven kan gebruiken iig)
-
-2. Import -> Maven ->  de pom.xml in de map summarizer
-
-3. Zet in src/main/java/ie.dcu.cngl.summarizer.main/Test.java de testFileLoc goed voor jezelf (N.B.: dubbele backslashes)
-
-4. Speel een beetje met de instellingen
-
-5. Runnen
