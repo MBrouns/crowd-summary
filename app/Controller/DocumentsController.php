@@ -25,7 +25,7 @@ class DocumentsController extends AppController {
                 $this->Session->setFlash('Document could not be uploaded');
             }
         }
-        
+
         //Load arguments for document list filter
         if (isset($_POST["inputTitle"])) {
             $this->set('titleFilter', mysql_real_escape_string($_POST["inputTitle"]));
@@ -42,20 +42,34 @@ class DocumentsController extends AppController {
         } else {
             $this->set('contentFilter', '');
         }
-        
+
         //get all documents
         $this->set('documents', $this->Document->find('all'));
     }
 
     public function summary($id) {
         $this->Document->id = $id;
-        if(!$this->Document->exists()){
+        if (!$this->Document->exists()) {
             throw new NotFoundException(__('Invalid document id'));
         }
 
+        $document = $this->Document->read(null, $id);
+        if (empty($document['Sentence'])) {//generate summary
+            $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $id . ' ' . APP . 'webroot\crowdsum 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems
+            $cmdt = "java -version 2> response";
+            $lastline = exec($cmd, $output, $returnVar);    
+            //debug($output);
+            if(count($output) != 6){//summarizer didn't output all 6 steps so sth is wrong
+                $this->Session->setFlash(__('Automatic summarization failed. Please try again later'));
+            }else{
+                $this->Session->setFlash(__('Succesfully created automatic summary'));
+            }
+        }
+
         //display document
-        $this->set('document', $this->Document->read(null, $id));
+        $this->set('document', $this->Document->read(null, $id));         
         
+
         //temp var
         //$this->set('id', $id);
     }
