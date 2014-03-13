@@ -59,7 +59,7 @@ public class Summarizer {
 				input = rs.getString("fulltext");
 			}
 		
-			ISummariser summariser = new CustomSummarizer();
+			CustomSummarizer summariser = new CustomSummarizer();
 			int noOfLines = (int) Math.floor(Utilities.getSentences(input).length * 0.1);
 			String result = summariser.summarise(input, noOfLines);
 			String[] resultSentences = Utilities.getSentences(result);
@@ -87,6 +87,16 @@ public class Summarizer {
 				
 			}
 			System.out.println("Database insertion complete");
+			
+			System.out.println("Start generating keywords for document");
+			
+			for(String s: summariser.getKeywords(input, 3)){
+				PreparedStatement sqlAddKeyword = c.prepareStatement("INSERT INTO keywords (document_id, keyword) VALUES (?, ?)");
+				sqlAddKeyword.setInt(1, docID);
+				sqlAddKeyword.setString(2,  s);
+				sqlAddKeyword.execute();
+			}
+			System.out.println("Keywords stored in database");
 		    c.commit();
 		    c.close();
 		    System.out.println("Database connection closed");

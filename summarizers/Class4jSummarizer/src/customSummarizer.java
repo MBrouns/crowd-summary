@@ -77,7 +77,8 @@ public class CustomSummarizer implements ISummariser {
     public String summarise(String input, int numSentences) {
         return summariseInternal(input, numSentences, 3,  null);
     }
-
+    
+ 
 
     protected String summariseInternal(String input, int numSentences, int minWordsInSentence, ITokenizer tokenizer) {
         // get the frequency of each word in the input
@@ -160,6 +161,7 @@ public class CustomSummarizer implements ISummariser {
     }
 
 
+    
     /**
      * @see net.sf.classifier4J.summariser.ISummariser#getKeywords(java.lang.String, int)
      */
