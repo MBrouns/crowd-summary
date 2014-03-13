@@ -5,7 +5,9 @@
  */
 
 class UsersController extends AppController {
-
+    
+    public $uses = array('PersonalDocument', 'User');
+    
     public function beforeFilter() {
         parent::beforeFilter();
         // Allow users to register and logout.
@@ -35,7 +37,10 @@ class UsersController extends AppController {
         if (!$this->User->exists()) {
             throw new NotFoundException(__('Invalid user'));
         }
-        $this->set('user', $this->User->read(null, $id));
+        
+        //get all documents from user
+        $data = $this->PersonalDocument->find('all', array('User.user_id' => $this->User->id));             
+        $this->set('data', $data);
     }
 
     public function add() {
