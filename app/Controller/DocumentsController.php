@@ -30,7 +30,7 @@ class DocumentsController extends AppController {
                     $lastline = exec($cmd, $output, $returnVar);               
                     
                     if (count($output) != 6) {//summarizer didn't output all 6 steps so sth is wrong
-                        $this->Session->setFlash(__('Automatic summarization failed. Please try again later'));
+                        $this->Session->setFlash(__('Automatic summarization failed.'));
                     } else {
                         $this->Session->setFlash(__('Succesfully created automatic summary'));
                     }
