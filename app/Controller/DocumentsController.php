@@ -24,10 +24,11 @@ class DocumentsController extends AppController {
                 //create summary
                 $document = $this->Document->read(null, $this->Document->id);
                 if (empty($document['Sentence'])) {//generate summary                    
+                    
+                    //call java summarizer
                     $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' ' . APP . 'webroot\crowdsum 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems
-                    $cmdt = "java -version 2> response";
                     $lastline = exec($cmd, $output, $returnVar);               
-
+                    
                     if (count($output) != 6) {//summarizer didn't output all 6 steps so sth is wrong
                         $this->Session->setFlash(__('Automatic summarization failed. Please try again later'));
                     } else {
