@@ -2,43 +2,37 @@ jQuery.fn.highlight=function(c){function e(b,c){var d=0;if(3==b.nodeType){var a=
 
 $(document).ready(function() {
 
+	// Action Buttons
 	mode = "Highlight";
 	$(".btn-group button").click(function() {  
     	$(".btn-group button").not(this).removeClass('active');
     	$(this).toggleClass('active');
     	mode = $(this).text();
 	});
+
+	// Initialize highlights
+	for (var i = 0; i < generated.length; i++) {
+		$('#summary').highlight(generated[i]);
+	};
 	
-
-
-
+	// Remove highlights
 	$('#summary').on('click', '.highlighted', function() {
 		$('#summary').getHighlighter().removeHighlights(this);
 	});
 
+	// Initialize user highlighter
 	$('#summary').textHighlighter( {
 		onBeforeHighlight: function(range) {
         	return true;
         }
 	});
-
 	$('#color-picker div.color').click(function() {
 	  var color = $(this).css('background-color');
 	  $('#summary').getHighlighter().setColor(color);
 	});
 
-	sentences = $("#summary").text().split(".");
-          
-
-	// Highlight sentences from DB
-	for (var i = 0; i < generated.length; i++) {
-		$('#summary').highlight(generated[i]);
-	};
-	
-
-
-
 	// Gather user input highlights
+	sentences = $("#summary").text().split(".");
 	$("#generate-button").click( function() {
 		/* Sentence Summary */
 		$("#generated-summary").html("");

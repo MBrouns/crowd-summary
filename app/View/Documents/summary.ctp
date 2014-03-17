@@ -5,11 +5,11 @@
 <div class="container">
     <div class="summary-container">
         <div class="panel panel-primary">
-            <div class="panel-heading"><?php echo $document['Document']['title']; ?>: summary</div>
+            <div class="panel-heading"><?php echo $document['Document']['title']; ?></div>
             <div class="panel-body">
                 <p>This document is automatically summarized<?php 
                 if ($document['Document']['contributions'] > 0) {
-                	echo 'and improved by '. $document['Document']['contributions'] .' users. </p>';
+                	echo ' and improved by '. $document['Document']['contributions'] .' users';
                 }
                 ?>.</p>
                 <div class="btn-group">
