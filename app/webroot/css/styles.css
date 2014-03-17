@@ -20,3 +20,7 @@
 .clearboth {
 	clear: both;
 }
+
+.highlighted {
+	background-color: rgb(255, 255, 123);
+}

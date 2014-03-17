@@ -7,28 +7,37 @@
         <div class="panel panel-primary">
             <div class="panel-heading"><?php echo $document['Document']['title']; ?>: summary</div>
             <div class="panel-body">
-                <p>This document is automatically summarized and improved by <?php echo $document['Document']['contributions']; ?> users. </p>
+                <p>This document is automatically summarized<?php 
+                if ($document['Document']['contributions'] > 0) {
+                	echo 'and improved by '. $document['Document']['contributions'] .' users. </p>';
+                }
+                ?>.</p>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default" id="highlight-button">Highlight</button>
+                    <button type="button" class="btn btn-default active" id="highlight-button">Highlight</button>
                     <button type="button" class="btn btn-default" id="notes-button">Notes</button>
                 </div> 
             </div>
         </div>
 
-        <div id="summary">                       
-            <?php echo $document['Document']['fulltext']; ?>
+        <div id="summary">
+            <?php echo htmlentities($document['Document']['fulltext'], ENT_QUOTES); ?>
         </div>
         <button type="submit" class="btn btn-primary" id="generate-button">Generate</button>
         <div class="clearboth"></div>
         <h1>Sentence Summary</h1>
         <div id="generated-summary">
-            <?php
-            foreach ($document['Sentence'] as $sentence) {
-                echo $sentence['sentence'] . '. ';
-            }
-            ?>
+            
         </div>
         <h1>User Summary</h1>
         <div id="user-summary"></div>
     </div>
 </div>
+
+<script type="text/javascript">
+var generated = [];
+<?php
+    foreach ($document['Sentence'] as $sentence) {
+        echo "generated.push('".addslashes($sentence['sentence']) ."');\n";
+    }
+?>
+</script>
