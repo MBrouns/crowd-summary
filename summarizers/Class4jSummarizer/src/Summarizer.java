@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 
 /**
  * @author mbrouns
@@ -67,25 +68,27 @@ public class Summarizer {
 			int noOfLines = (int) Math.floor(CustomSummarizer.getSentences(input).length * 0.1);
 			String result = summariser.summarise(input, noOfLines);
 			String[] resultSentences = CustomSummarizer.getSentences(result);
+			String[] allSentences = CustomSummarizer.getSentences(input);
 			System.out.println("Summary sentences found, inserting into database");
 			
-			for(String s: resultSentences){
+			for(String s: allSentences){
 				PreparedStatement sqlAddSentence = c.prepareStatement("INSERT INTO sentences (document_id, sentence) VALUES (?, ?);", Statement.RETURN_GENERATED_KEYS);
 				sqlAddSentence.setInt(1, docID);
 				sqlAddSentence.setString(2, s);				
 				sqlAddSentence.execute();
-				
-				ResultSet generatedKeys = sqlAddSentence.getGeneratedKeys();
-				if(generatedKeys.next()){
-					try{
-					PreparedStatement sqlAddUserSentence = c.prepareStatement("INSERT INTO users_sentences (user_id, sentence_id, ranking) VALUES (0, ?, 1)");
-					sqlAddUserSentence.setInt(1, generatedKeys.getInt(1));
-					sqlAddUserSentence.execute();
-					}catch (Exception e){
-						e.printStackTrace();
+				if(Arrays.asList(resultSentences).contains(s)){
+					ResultSet generatedKeys = sqlAddSentence.getGeneratedKeys();
+					if(generatedKeys.next()){
+						try{
+						PreparedStatement sqlAddUserSentence = c.prepareStatement("INSERT INTO users_sentences (user_id, sentence_id, ranking) VALUES (0, ?, 1)");
+						sqlAddUserSentence.setInt(1, generatedKeys.getInt(1));
+						sqlAddUserSentence.execute();
+						}catch (Exception e){
+							e.printStackTrace();
+						}
+					}else{
+						throw new SQLException("Adding sentence failed");
 					}
-				}else{
-					throw new SQLException("Adding sentence failed");
 				}
 				
 				
