@@ -13,6 +13,7 @@
       <ul class="nav navbar-nav">
         <li id="menu-documents"><?php echo $this->Html->link('Documents', array('controller' => 'documents', 'action' => 'index')); ?></li>
         <li id="menu-info"><?php echo $this->Html->link('Info', array('controller' => 'info', 'action' => 'index')); ?></li>
+        <li id="menu-info"><?php echo (isset($user['id']) ? $this->Html->link('Personal', array('controller' => 'users', 'action' => 'view', $user['id'])) : ''); ?></li>
       </ul>
       <form class="navbar-form navbar-right" role="form">
         <div class="form-group">

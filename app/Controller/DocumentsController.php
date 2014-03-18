@@ -5,21 +5,30 @@
  */
 
 class DocumentsController extends AppController {
+    
+    public $uses = array('PersonalDocument', 'Document');
+    
     /*
      * Overview of all documents
      */
 
     public function index() {
-
+        
         if (isset($this->request->data['Document']['file'])) {//file has been uploaded                 
             //save document
             $this->Document->set(array(
                 'title' => $this->request->data['Document']['file']['name'],
                 'fulltext' => file_get_contents($this->request->data['Document']['file']['tmp_name'])
             ));
-
-            if ($this->Document->save()) {//@TODO: connecting users to their documents       
+            
+            if ($this->Document->save()) {
                 $this->Session->setFlash('Document was succesfully uploaded');
+                //connect user to document
+                $this->PersonalDocument->saveAssociated(array(
+                    'User' => array('id' => $this->Auth->user('id')),
+                    'Document' => array('id' => $this->Document->id),
+                ));
+                
 
                 //create summary
                 $document = $this->Document->read(null, $this->Document->id);
@@ -58,7 +67,7 @@ class DocumentsController extends AppController {
         } else {
             $this->set('contentFilter', '');
         }
-
+       
         //get all documents
         $this->set('documents', $this->Document->find('all'));
     }

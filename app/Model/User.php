@@ -7,6 +7,12 @@
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 
 class User extends AppModel {
+    
+    /*
+     * Define relations
+     */
+    public $hasMany = array('PersonalDocument');
+    
     /*
      * Validate fields before updating databse
      */
