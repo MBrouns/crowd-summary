@@ -12,12 +12,13 @@ $(document).ready(function() {
 
 	// Initialize highlights
 	for (var i = 0; i < generated.length; i++) {
-		$('#summary').highlight(generated[i]);
+		//$('#summary').highlight(generated[i]);
+		$("#sentence" + generated[i]).addClass("highlighted");
 	};
 	
-	// Remove highlights
-	$('#summary').on('click', '.highlighted', function() {
-		$('#summary').getHighlighter().removeHighlights(this);
+	// Handle sentences highlights
+	$("#summary > span").click(function() {
+		$(this).toggleClass("highlighted");
 	});
 
 	// Initialize user highlighter
@@ -32,26 +33,36 @@ $(document).ready(function() {
 	});
 
 	// Gather user input highlights
-	sentences = $("#summary").text().split(".");
+	
 	$("#generate-button").click( function() {
 		/* Sentence Summary */
+		sentences = $("#summary span").hasClass("highlighted");
+		ids = [];
 		$("#generated-summary").html("");
-		generated = "";
-		selected = [];
 		html = $("#summary").html();
-		for (var i = 0; i < sentences.length; i++) {
-			s = sentences[i] + ".";
-			if(html.indexOf(jQuery.trim( s )) == -1) {
-				// sentence selected.
-				selected.push(s);
-				generated += s;
-			}
-		};
-		$("#generated-summary").html(generated);
+		/*for (var i = 0; i < sentences.length; i++) {
+			s = sentences[i];
+			html += s + "<br/>";
+		};*/
+		$("#generated-summary").html(html);
 
 		/* User Summary */
 		$("#user-summary").html("");
-		$("#user-summary").html($("#summary").getHighlighter().getAllHighlights($("#summary")).text());
+		//other type html
+		html = '';
+		$.each($("#summary .highlighted"), function(i,val) {
+			html += $(val).text() + "<br/>";
+			id = $(val).attr("id");
+			if(id != undefined) {
+				id = id.substr(8);
+			} else {
+				id = $(val).parent().attr("id").substr(8);
+			}
+			ids.push(id);
+
+		});
+		$("#user-summary").html(html);
+		$("#ids-dump").html(ids.toString());
 	});
 
 });

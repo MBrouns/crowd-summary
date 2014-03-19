@@ -20,16 +20,22 @@
         </div>
 
         <div id="summary">
-            <?php echo htmlentities($document['Document']['fulltext'], ENT_QUOTES); ?>
+            <?php //echo htmlentities($document['Document']['fulltext'], ENT_QUOTES);
+            foreach ($document['Sentence'] as $sentence) {
+        		echo "<span id='sentence".$sentence['id']."'>" .($sentence['sentence']) .  "</span><br/>";
+   			} 
+   			?>
         </div>
         <button type="submit" class="btn btn-primary" id="generate-button">Generate</button>
         <div class="clearboth"></div>
-        <h1>Sentence Summary</h1>
+        <h1>Summary flavour 1</h1>
         <div id="generated-summary">
             
         </div>
-        <h1>User Summary</h1>
+        <h1>Summary flavour 2</h1>
         <div id="user-summary"></div>
+        <h1>Highlighted sentences dump</h1>
+        <div id="ids-dump"></div>
     </div>
 </div>
 
@@ -37,7 +43,7 @@
 var generated = [];
 <?php
     foreach ($document['Sentence'] as $sentence) {
-        echo "generated.push('".addslashes($sentence['sentence']) ."');\n";
+        echo "generated.push('".addslashes($sentence['id']) ."');\n";
     }
 ?>
 </script>
