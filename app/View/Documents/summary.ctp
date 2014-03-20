@@ -9,13 +9,14 @@
             <div class="panel-body">
             	<p><?php
             	if($mode == 'personal') {
-            		echo "This is your saved version of the summary. <a href='automatic'>Open generated version</a>";
+            		echo "This is your saved version of the summary. " . $this->Html->link('Open generated version.', array('controller' => 'documents', 'action' => 'summary', $document['Document']['id'] , 'automatic'));
+
             	} else {
             		echo "This document is automatically summarized";
                     if ($document['Document']['contributions'] > 0) {
                         echo ' and improved by ' . $document['Document']['contributions'] . ' users';
                     }
-                    echo ". <a href='personal'>Open your own version</a>";
+                    echo ". " . $this->Html->link('Open own version.', array('controller' => 'documents', 'action' => 'summary', $document['Document']['id'], 'personal'));
                 }
                 ?></p>
                 <div class="btn-group">
@@ -37,7 +38,7 @@
         <?php
         echo $this->Form->create('Summary');
         echo $this->Form->hidden('user_sentences');
-        echo $this->Form->submit('Generate', array('class' => 'btn btn-primary right', 'id' => 'generate-button'));
+        echo $this->Form->submit('Save', array('class' => 'btn btn-primary right', 'id' => 'generate-button'));
         ?>
 
         <div class="clearboth"></div>
