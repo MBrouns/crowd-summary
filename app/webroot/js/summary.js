@@ -1,5 +1,3 @@
-jQuery.fn.highlight=function(c){function e(b,c){var d=0;if(3==b.nodeType){var a=b.data.toUpperCase().indexOf(c);if(0<=a){d=document.createElement("span");d.className="highlighted";a=b.splitText(a);a.splitText(c.length);var f=a.cloneNode(!0);d.appendChild(f);a.parentNode.replaceChild(d,a);d=1}}else if(1==b.nodeType&&b.childNodes&&!/(script|style)/i.test(b.tagName))for(a=0;a<b.childNodes.length;++a)a+=e(b.childNodes[a],c);return d}return this.length&&c&&c.length?this.each(function(){e(this,c.toUpperCase())}): this};jQuery.fn.removeHighlight=function(){return this.find("span.highlighted").each(function(){this.parentNode.firstChild.nodeName;with(this.parentNode)replaceChild(this.firstChild,this),normalize()}).end()};
-
 $(document).ready(function() {
 
 	// Action Buttons
@@ -28,6 +26,11 @@ $(document).ready(function() {
 		}
 	});
 
+	// Remove all highlights
+	$("#removeAll-button").click(removeAll = function() {
+		$("#summary > span").removeClass("highlighted");
+	})
+
 	// Initialize user highlighter
 	$('#summary').textHighlighter( {
 		onBeforeHighlight: function(range) {
@@ -39,15 +42,16 @@ $(document).ready(function() {
 	
 	$("#generate-button").click( generate = function() {
 		/* Sentence Summary */
-		sentences = $("#summary span").hasClass("highlighted");
+		//sentences = $("#summary span").hasClass("highlighted");
 		ids = [];
 		$("#generated-summary").html("");
 		html = $("#summary").html();
+		$("#generated-summary").html(html);
 		/*for (var i = 0; i < sentences.length; i++) {
 			s = sentences[i];
 			html += s + "<br/>";
 		};*/
-		$("#generated-summary").html(html);
+		
 
 		/* User Summary */
 		$("#user-summary").html("");

@@ -17,15 +17,12 @@
                     <button type="button" class="btn btn-default" id="notes-button">Notes</button>
                 </div>
 
-                <div class="btn-group right">
-                    <button type="button" class="btn btn-default active" id="highlight-button">Remove Highlights TODO</button>                  
-                </div>
+                <button type="button" class="btn btn-default right" id="removeAll-button">Remove All Highlights</button>                  
             </div>
         </div>
 
         <div id="summary">
-            <?php //echo htmlentities($document['Document']['fulltext'], ENT_QUOTES);
-
+            <?php
             foreach ($document['Sentence'] as $sentence) {
         		echo "<span id='sentence".$sentence['id']."'>" .($sentence['sentence']) .  "</span><br/>";
    			}  
@@ -33,10 +30,9 @@
         </div>        
         <?php
         echo $this->Form->create('Summary');
-        echo $this->Form->hidden('user_sentences', array('value' => 'Hier serialized / json values'));
-        echo $this->Form->submit('Generate');
+        echo $this->Form->hidden('user_sentences');
+        echo $this->Form->submit('Generate', array('class' => 'btn btn-primary right', 'id' => 'generate-button'));
         ?>
-        <!-- <button type="submit" class="btn btn-primary right" id="generate-button">Generate</button> -->
 
         <div class="clearboth"></div>
 
