@@ -17,8 +17,15 @@ $(document).ready(function() {
 	};
 	
 	// Handle sentences highlights
-	$("#summary > span").click(function() {
-		$(this).toggleClass("highlighted");
+	$("#summary > span").mouseup(function() {
+		if(mode == "Highlight" && window.getSelection() == 0) {
+			$(this).toggleClass(function(index, cl, mode) {
+				$(this).children().each(function() {
+					$(this).contents().unwrap();
+				})
+			});
+
+		}
 	});
 
 	// Initialize user highlighter
@@ -26,10 +33,6 @@ $(document).ready(function() {
 		onBeforeHighlight: function(range) {
         	return true;
         }
-	});
-	$('#color-picker div.color').click(function() {
-	  var color = $(this).css('background-color');
-	  $('#summary').getHighlighter().setColor(color);
 	});
 
 	// Gather user input highlights
