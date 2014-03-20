@@ -83,7 +83,54 @@ class DocumentsController extends AppController {
 
         //save summary
         if ($this->request->is('post')) {
-            debug($this->request);
+            if ($this->request->data['Summary']['user_sentences']) {
+                $ids = explode(',', $this->request->data['Summary']['user_sentences']);
+                $summary = array();
+
+                foreach ($ids as $key => $id) {
+                    $summary[] = array('user_id' => $this->Auth->user('id'), 'sentence_id' => $id);
+                }
+
+                if ($this->Summary->deleteAll(array('user_id' => $this->Auth->user('id')))) {//delete old personal summary
+                    if ($this->Summary->saveMany($summary)) {
+                        $personalDocument = $this->PersonalDocument->find('first', array('conditions' => array('user_id' => $this->Auth->user('id'), 'document_id' => $this->Document->id)));
+                        if(!empty($personalDocument)){
+                            $this->PersonalDocument->id = $personalDocument['PersonalDocument']['id'];
+                        }
+                        if ($this->PersonalDocument->save(array('user_id' => $this->Auth->user('id'), 'document_id' => $this->Document->id))) {
+                            $this->Session->setFlash(__('Your personal summary has been saved'));
+
+                            //update generated rankings
+                            $generated_sum = $this->Summary->find('all', array('conditions' => array('Summary.user_id' => 0, 'Sentence.document_id' => $this->Document->id)));
+                            foreach ($generated_sum as $sentence => $data) {
+                                if (in_array($data['Summary']['sentence_id'], $ids)) {
+                                    $generated_sum[$sentence]['Summary']['ranking'] = $generated_sum[$sentence]['Summary']['ranking'] + 1;
+                                    $ids = array_diff($ids, array($data['Summary']['sentence_id']));
+                                } else {
+                                    $generated_sum[$sentence]['Summary']['ranking'] = $generated_sum[$sentence]['Summary']['ranking'] - 1;
+                                }
+                            }
+
+                            //add ids to new generated_sum
+                            foreach ($ids as $id) {
+                                // $this->Sentence->find();
+                                $generated_sum[]['Summary'] = array('user_id' => 0, 'sentence_id' => $id, 'ranking' => 1);
+                            }
+
+                            //save rankings
+                            if (!$this->Summary->saveMany($generated_sum)) {
+                                $this->Session->setFlash(__('Ranking could not be updated'));
+                            }
+                        } else {
+                            $this->Session->setFlash(__('Personal document could not be saved'));
+                        }
+                    } else {
+                        $this->Session->setFlash(__('Summary could not be saved'));
+                    }
+                } else {
+                    $this->Session->setFlash(__('Old summary could not be deleted'));
+                }
+            }
         }
 
         //display document
@@ -97,7 +144,7 @@ class DocumentsController extends AppController {
         }
 
         //Get generated summary @TODO calculate average of all users
-        $generated = $this->Summary->find('all', array('conditions' => array('user_id' => 0)));
+        $generated = $this->generate_summary($this->Document->id);
         $this->set('generated_summary', $generated);
 
         //temp var
@@ -111,14 +158,14 @@ class DocumentsController extends AppController {
      */
 
     private function generate_summary($docId) {
-        $this->Document->id = $id;
+        $this->Document->id = $docId;
         if (!$this->Document->exists()) {
             throw new NotFoundException(__('Invalid document id'));
         }
 
-
         //get auto summary
-        $auto_sentences = $this->Summary->find('all', array('conditions' => array('user_id' => 0)));
+        $auto_sentences = $this->Summary->find('all', array('conditions' => array('Summary.user_id' => 0, 'Sentence.document_id' => $this->Document->id, 'Summary.ranking > ' => 0),
+            'orderBy' => 'Summary.ranking DESC', 'Summary.id'));
 
         //get all users with this docID
         $users = $this->PersonalDocument->find('all', array('conditions' => array('document_id' => $this->Document->id)));
@@ -133,7 +180,9 @@ class DocumentsController extends AppController {
             $total_sentences = $total_sentences + count(end($summaries));
         }
 
-        $sum_size = $total_sentences / count($users);
+        $sum_size = ceil($total_sentences / count($users));
+
+        return array_slice($auto_sentences, 0, $sum_size);
     }
 
     /*
