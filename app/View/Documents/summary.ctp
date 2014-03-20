@@ -1,6 +1,6 @@
 <?php echo $this->Html->script('jquery.textHighlighter.min'); ?>
 <?php echo $this->Html->script('summary'); ?>
-<?php //debug($document);  ?>
+<?php //debug($document); debug($personal_summary); debug($generated_summary);  ?>
 
 <div class="container">
     <div class="summary-container">
@@ -26,7 +26,13 @@
    			} 
    			?>
         </div>
-        <button type="submit" class="btn btn-primary" id="generate-button">Generate</button>
+        
+        <?php
+        echo $this->Form->create('Summary');
+        echo $this->Form->hidden('user_sentences', array('value' => 'Hier serialized / json values'));
+        echo $this->Form->submit('Generate');
+        ?>
+        <!-- <button type="submit" class="btn btn-primary" id="generate-button">Generate</button> -->
         <div class="clearboth"></div>
         <h1>Summary flavour 1</h1>
         <div id="generated-summary">

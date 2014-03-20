@@ -6,7 +6,7 @@
 
 class DocumentsController extends AppController {
     
-    public $uses = array('PersonalDocument', 'Document');
+    public $uses = array('PersonalDocument', 'Document', 'Summary', 'Sentence');
     
     /*
      * Overview of all documents
@@ -79,7 +79,18 @@ class DocumentsController extends AppController {
         }
 
         //display document
-        $this->set('document', $this->Document->read(null, $this->Document->id));
+        $this->set('document', $this->Document->read(null, $this->Document->id));              
+        
+        //see if user has personal summary
+        $user = $this->Auth->user();
+        $summary = $this->Summary->find('all', array('conditions' => array('user_id' => $user['id'])));        
+        if(!empty($summary)){//user has summary
+            $this->set('personal_summary', $summary);
+        }
+        
+        //Get generated summary @TODO calculate average of all users
+        $generated = $this->Summary->find('all', array('conditions' => array('user_id' => 0)));
+        $this->set('generated_summary', $generated);
 
         //temp var
         //$this->set('id', $id);
