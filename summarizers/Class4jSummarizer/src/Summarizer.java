@@ -32,7 +32,7 @@ public class Summarizer {
 		    try {
 		    	dbPath = args[1];
 		    } catch (Exception e) {
-		        System.err.println("dbPath must be an integer");
+		        System.err.println("dbPath must be a string");
 		        System.exit(1);
 		    }
 		}else{
