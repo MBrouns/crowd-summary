@@ -18,8 +18,7 @@
     echo $this->Html->css('jumbotron');
     echo $this->Html->css('styles');
     ?>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <?php echo $this->Html->script('jquery'); ?>
     <?php echo $this->Html->script('bootstrap.min'); ?>
     <?php echo $this->Html->script('scripts'); ?>
 
@@ -38,12 +37,6 @@
 
 	<?php echo $this->fetch('content'); ?>
 
-
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
     
   </body>
 </html>

@@ -73,9 +73,11 @@ class DocumentsController extends AppController {
 
     /*
      * Display summary and document to user
+     * id = document id
+     * mode = personal or automatic
      */
 
-    public function summary($id) {
+    public function summary($id, $forceMode = null) {
         $this->Document->id = $id;
         if (!$this->Document->exists()) {
             throw new NotFoundException(__('Invalid document id'));
@@ -141,14 +143,22 @@ class DocumentsController extends AppController {
         $summary = $this->Summary->find('all', array('conditions' => array('user_id' => $user['id'])));
         if (!empty($summary)) {//user has summary
             $this->set('personal_summary', $summary);
+            $mode = 'personal';
+        } else {
+            $mode = 'automatic';
         }
+
 
         //Get generated summary @TODO calculate average of all users
         $generated = $this->generate_summary($this->Document->id);
         $this->set('generated_summary', $generated);
 
-        //temp var
-        //$this->set('id', $id);
+        if(isset($forceMode)) {
+            $this->set('mode', $forceMode);
+        } else {
+            $this->set('mode', $mode);
+        }
+        
     }
 
     /*

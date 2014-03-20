@@ -9,9 +9,8 @@ $(document).ready(function() {
 	});
 
 	// Initialize highlights
-	for (var i = 0; i < generated.length; i++) {
-		//$('#summary').highlight(generated[i]);
-		$("#sentence" + generated[i]).addClass("highlighted");
+	for (var i = 0; i < highlights.length; i++) {
+		$("#sentence" + highlights[i]).addClass("highlighted");
 	};
 	
 	// Handle sentences highlights
@@ -38,27 +37,18 @@ $(document).ready(function() {
         }
 	});
 
-	// Gather user input highlights
-	
+	// Gather user input highlights	
 	$("#generate-button").click( generate = function() {
-		/* Sentence Summary */
-		//sentences = $("#summary span").hasClass("highlighted");
+				
+		//flavour 1: just use html of the highlighted document: BOOK STYLE
 		ids = [];
-		$("#generated-summary").html("");
-		html = $("#summary").html();
-		$("#generated-summary").html(html);
-		/*for (var i = 0; i < sentences.length; i++) {
-			s = sentences[i];
-			html += s + "<br/>";
-		};*/
+		html1 = $("#summary").html();
+		$("#generated-summary").html(html1);		
 		
-
-		/* User Summary */
-		$("#user-summary").html("");
-		//other type html
-		html = '';
+		// flavour 2: only use the highlighted parts of the text
+		html2 = '';
 		$.each($("#summary .highlighted"), function(i,val) {
-			html += $(val).text() + "<br/>";
+			html2 += $(val).text() + "<br/>";
 			id = $(val).attr("id");
 			if(id != undefined) {
 				id = id.substr(8);
@@ -68,11 +58,10 @@ $(document).ready(function() {
 			ids.push(id);
 
 		});
-		$("#user-summary").html(html);
-		$("#ids-dump").html(ids.toString());
+		$("#user-summary").html(html2);
+		
 		$("#SummaryUserSentences").val(ids.toString());
 
 	});
 
 });
-

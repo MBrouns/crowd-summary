@@ -7,11 +7,17 @@
         <div class="panel panel-primary">
             <div class="panel-heading"><?php echo $document['Document']['title']; ?></div>
             <div class="panel-body">
-                <p>This document is automatically summarized<?php
+            	<p><?php
+            	if($mode == 'personal') {
+            		echo "This is your saved version of the summary. <a href='automatic'>Open generated version</a>";
+            	} else {
+            		echo "This document is automatically summarized";
                     if ($document['Document']['contributions'] > 0) {
                         echo ' and improved by ' . $document['Document']['contributions'] . ' users';
                     }
-                    ?>.</p>
+                    echo ". <a href='personal'>Open your own version</a>";
+                }
+                ?></p>
                 <div class="btn-group">
                     <button type="button" class="btn btn-default active" id="highlight-button">Highlight</button>
                     <button type="button" class="btn btn-default" id="notes-button">Notes</button>
@@ -24,17 +30,15 @@
         <div id="summary">
             <?php
             foreach ($document['Sentence'] as $sentence) {
-                echo "<span id='sentence" . $sentence['id'] . "'>" . ($sentence['sentence']) . "</span><br/>";
+                echo "<span id='sentence" . $sentence['id'] . "'>" . $sentence['sentence'] . "</span><br/>";
             }
-            ?>
+            ?>	
         </div>        
         <?php
         echo $this->Form->create('Summary');
         echo $this->Form->hidden('user_sentences');
         echo $this->Form->submit('Generate', array('class' => 'btn btn-primary right', 'id' => 'generate-button'));
         ?>
-
-        <!-- <button type="submit" class="btn btn-primary right" id="generate-button">Generate</button>  -->
 
         <div class="clearboth"></div>
 
@@ -44,17 +48,21 @@
         <h1>Summary flavour 2</h1>
         <div id="user-summary"></div>
 
-        <h1>Highlighted sentences dump</h1>
-        <div id="ids-dump"></div>
-
     </div>
 </div>
 
 <script type="text/javascript">
-    var generated = [];
+    var highlights = [];
 <?php
-foreach ($generated_summary as $sentence) {
-    echo "generated.push('" . addslashes($sentence['Summary']['sentence_id']) . "');\n";
+if ($mode == 'personal') {
+	$highlightsJS = $personal_summary;
+} else {
+	$highlightsJS = $generated_summary;
+}
+
+
+foreach ($highlightsJS as $sentence) {
+    echo "highlights.push('" . addslashes($sentence['Summary']['sentence_id']) . "');\n";
 }
 ?>
 </script>
