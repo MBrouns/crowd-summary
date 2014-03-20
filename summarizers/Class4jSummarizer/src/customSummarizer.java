@@ -59,10 +59,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
-import net.sf.classifier4J.ITokenizer;
-import net.sf.classifier4J.Utilities;
-import net.sf.classifier4J.summariser.ISummariser;
+import javax.swing.text.Utilities;
 
 public class CustomSummarizer implements ISummariser {
 
@@ -79,6 +78,12 @@ public class CustomSummarizer implements ISummariser {
     }
     
  
+    @SuppressWarnings("rawtypes")
+	public TreeMap tfIdfCalculator() {
+       TreeMap tfidf = new TreeMap();
+  
+       return tfidf;
+    }
     /**
      * 
      * @param input
@@ -90,7 +95,8 @@ public class CustomSummarizer implements ISummariser {
     protected String summariseInternal(String input, int numSentences, int minWordsInSentence, ITokenizer tokenizer) {
         // get the frequency of each word in the input
         @SuppressWarnings("rawtypes")
-		Map wordFrequencies = Utilities.getWordFrequency(input);
+		
+        Map wordFrequencies = Utilities.getWordFrequency(input);
 
         // now create a set of the X most frequent words
         Set<String> mostFrequentWords = getMostFrequentWords(100, wordFrequencies);
