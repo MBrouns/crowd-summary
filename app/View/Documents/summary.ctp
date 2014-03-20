@@ -15,41 +15,48 @@
                 <div class="btn-group">
                     <button type="button" class="btn btn-default active" id="highlight-button">Highlight</button>
                     <button type="button" class="btn btn-default" id="notes-button">Notes</button>
-                </div> 
+                </div>
+
+                <div class="btn-group right">
+                    <button type="button" class="btn btn-default active" id="highlight-button">Remove Highlights TODO</button>                  
+                </div>
             </div>
         </div>
 
         <div id="summary">
             <?php //echo htmlentities($document['Document']['fulltext'], ENT_QUOTES);
+
             foreach ($document['Sentence'] as $sentence) {
         		echo "<span id='sentence".$sentence['id']."'>" .($sentence['sentence']) .  "</span><br/>";
-   			} 
+   			}  
    			?>
-        </div>
-        
+        </div>        
         <?php
         echo $this->Form->create('Summary');
         echo $this->Form->hidden('user_sentences', array('value' => 'Hier serialized / json values'));
         echo $this->Form->submit('Generate');
         ?>
-        <!-- <button type="submit" class="btn btn-primary" id="generate-button">Generate</button> -->
+        <!-- <button type="submit" class="btn btn-primary right" id="generate-button">Generate</button> -->
+
         <div class="clearboth"></div>
+
         <h1>Summary flavour 1</h1>
-        <div id="generated-summary">
-            
-        </div>
+        <div id="generated-summary" style="display:none"></div>
+
         <h1>Summary flavour 2</h1>
         <div id="user-summary"></div>
+
         <h1>Highlighted sentences dump</h1>
         <div id="ids-dump"></div>
+
     </div>
 </div>
 
 <script type="text/javascript">
 var generated = [];
 <?php
-    foreach ($document['Sentence'] as $sentence) {
-        echo "generated.push('".addslashes($sentence['id']) ."');\n";
+    foreach ($generated_summary as $sentence) {
+        echo "generated.push('".addslashes($sentence['Summary']['sentence_id']) ."');\n";
     }
 ?>
 </script>

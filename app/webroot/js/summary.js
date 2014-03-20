@@ -22,9 +22,9 @@ $(document).ready(function() {
 			$(this).toggleClass(function(index, cl, mode) {
 				$(this).children().each(function() {
 					$(this).contents().unwrap();
-				})
+				});
+				return "highlighted";
 			});
-
 		}
 	});
 
@@ -37,7 +37,7 @@ $(document).ready(function() {
 
 	// Gather user input highlights
 	
-	$("#generate-button").click( function() {
+	$("#generate-button").click( generate = function() {
 		/* Sentence Summary */
 		sentences = $("#summary span").hasClass("highlighted");
 		ids = [];
@@ -66,6 +66,8 @@ $(document).ready(function() {
 		});
 		$("#user-summary").html(html);
 		$("#ids-dump").html(ids.toString());
+		$("#SummaryUserSentences").val(ids.toString());
+
 	});
 
 });
