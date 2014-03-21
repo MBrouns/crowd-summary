@@ -63,6 +63,9 @@ import java.util.TreeMap;
 
 import javax.swing.text.Utilities;
 
+import net.sf.classifier4J.ITokenizer;
+import net.sf.classifier4J.summariser.ISummariser;
+
 public class CustomSummarizer implements ISummariser {
 
     @SuppressWarnings("unchecked")
