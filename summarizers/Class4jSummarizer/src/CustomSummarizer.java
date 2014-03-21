@@ -49,8 +49,6 @@
  * ====================================================================
  */
 
-
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -61,158 +59,165 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import net.sf.classifier4J.Utilities;
-
 import net.sf.classifier4J.ITokenizer;
 import net.sf.classifier4J.summariser.ISummariser;
 
 public class CustomSummarizer implements ISummariser {
 
-    @SuppressWarnings("unchecked")
-	protected Set<String> getMostFrequentWords(int count, Map<?, ?> wordFrequencies) {
-        return Utilities.getMostFrequentWords(count, wordFrequencies);
-    }
+	@SuppressWarnings("unchecked")
+	protected Set<String> getMostFrequentWords(int count,
+			Map<?, ?> wordFrequencies) {
+		return Utilities.getMostFrequentWords(count, wordFrequencies);
+	}
 
-    /**
-     * @see net.sf.classifier4J.summariser.ISummariser#summarise(java.lang.String)
-     */
-    public String summarise(String input, int numSentences) {
-        return summariseInternal(input, numSentences, 5,  null);
-    }
-    
- 
-    @SuppressWarnings("rawtypes")
+	/**
+	 * @see net.sf.classifier4J.summariser.ISummariser#summarise(java.lang.String)
+	 */
+	public String summarise(String input, int numSentences) {
+		return summariseInternal(input, numSentences, 5, null);
+	}
+
+	@SuppressWarnings("rawtypes")
 	public TreeMap tfIdfCalculator() {
-       TreeMap tfidf = new TreeMap();
-  
-       return tfidf;
-    }
-    /**
-     * 
-     * @param input
-     * @param numSentences
-     * @param minWordsInSentence
-     * @param tokenizer
-     * @return
-     */
-    protected String summariseInternal(String input, int numSentences, int minWordsInSentence, ITokenizer tokenizer) {
-        // get the frequency of each word in the input
-        @SuppressWarnings("rawtypes")
-		
-        Map wordFrequencies = Utilities.getWordFrequency(input);
+		TreeMap tfidf = new TreeMap();
 
-        // now create a set of the X most frequent words
-        Set<String> mostFrequentWords = getMostFrequentWords(100, wordFrequencies);
-        // break the input up into sentences
-        // workingSentences is used for the analysis, but
-        // actualSentences is used in the results so that the 
-        // capitalisation will be correct.      
-        String[] workingSentences = getSentences(input.toLowerCase());
-        
-        String[] actualSentences = getSentences(input);
-        /*
-        System.err.println("Sentences");
-        for (int i = 0; i < actualSentences.length; i++) {
-            System.err.println(actualSentences[i]);
-        }
-        */
-        // iterate over the most frequent words, and add the first sentence 
-        // that includes each word to the result
-        Set<String> outputSentences = new LinkedHashSet<String>();
-        Iterator<String> it = mostFrequentWords.iterator();
-        while (it.hasNext()) {
-            String word = it.next();
-            for (int i = 0; i < workingSentences.length; i++) {               
-                if (workingSentences[i].indexOf(word) >= 0 && workingSentences[i].split(" ").length >= minWordsInSentence) {
-                    outputSentences.add(actualSentences[i]);
-                    break;
-                }
-                if (outputSentences.size() >= numSentences) {
-                    break;
-                }
-            }
-            if (outputSentences.size() >= numSentences) {
-                break;
-            }
+		return tfidf;
+	}
 
-        }
-        List<String> reorderedOutputSentences = reorderSentences(outputSentences, input);
-        StringBuffer result = new StringBuffer("");
-        it = reorderedOutputSentences.iterator();
-        while (it.hasNext()) {
-            String sentence = it.next();
-            result.append(sentence);
-            result.append("."); // This isn't always correct - perhaps it should be whatever symbol the sentence finished with
-            if (it.hasNext()) {
-                result.append(" ");
-            }
-        }
-        return result.toString();
-    }
-
-    /**
-     * @param outputSentences
-     * @param input
-     * @return
-     */
-    private List<String> reorderSentences(Set<String> outputSentences, final String input) {
-        // reorder the sentences to the order they were in the 
-        // original text
-        ArrayList<String> result = new ArrayList<String>(outputSentences);
-
-        Collections.sort(result, new Comparator<Object>() {
-            public int compare(Object arg0, Object arg1) {
-                String sentence1 = (String) arg0;
-                String sentence2 = (String) arg1;
-
-                int indexOfSentence1 = input.indexOf(sentence1.trim());
-                int indexOfSentence2 = input.indexOf(sentence2.trim());
-                int result = indexOfSentence1 - indexOfSentence2;
-
-                return result;
-            }
-
-        });
-        return result;
-    }
-
-
-    /**
-     * 
-     * @param input a String which may contain many sentences
-     * @return an array of Strings, each element containing a sentence
-     */
-    public static String[] getSentences(String input) {
-        if (input == null) {
-            return new String[0];
-        } else {
-            // split on a ".", a "!", a "?" followed by a space or EOL
-            return input.split("((\\.|!|\\?)+(\\s|\\z))|((\r\n)|(\n))");
-        }
-
-    }
-    
-    /**
-     * @see net.sf.classifier4J.summariser.ISummariser#getKeywords(java.lang.String, int)
-     */
-    @SuppressWarnings("rawtypes")
-    public String[] getKeywords(String input, int numKeywords) {
-        // get the frequency of each word in the input
-       
+	/**
+	 * 
+	 * @param input
+	 * @param numSentences
+	 * @param minWordsInSentence
+	 * @param tokenizer
+	 * @return
+	 */
+	protected String summariseInternal(String input, int numSentences,
+			int minWordsInSentence, ITokenizer tokenizer) {
+		// get the frequency of each word in the input
+		@SuppressWarnings("rawtypes")
 		Map wordFrequencies = Utilities.getWordFrequency(input);
 
-        //System.out.println(wordFrequencies);
-        
-        Set mostFrequentWords = getMostFrequentWords(numKeywords, wordFrequencies);
-        //System.out.println(mostFrequentWords);
-        @SuppressWarnings("unchecked")
-		String[] results = (String[]) mostFrequentWords.toArray(new String[mostFrequentWords.size()]);
-        if (results.length <= numKeywords) {
-            return results;
-        } else {
-            String[] newResults = new String[numKeywords];
-            System.arraycopy(results, 0, newResults, 0, numKeywords);
-            return newResults;
-        }        
-    }
+		// now create a set of the X most frequent words
+		Set<String> mostFrequentWords = getMostFrequentWords(100,
+				wordFrequencies);
+		// break the input up into sentences
+		// workingSentences is used for the analysis, but
+		// actualSentences is used in the results so that the
+		// capitalisation will be correct.
+		String[] workingSentences = getSentences(input.toLowerCase());
+
+		String[] actualSentences = getSentences(input);
+		/*
+		 * System.err.println("Sentences"); for (int i = 0; i <
+		 * actualSentences.length; i++) {
+		 * System.err.println(actualSentences[i]); }
+		 */
+		// iterate over the most frequent words, and add the first sentence
+		// that includes each word to the result
+		Set<String> outputSentences = new LinkedHashSet<String>();
+		Iterator<String> it = mostFrequentWords.iterator();
+		while (it.hasNext()) {
+			String word = it.next();
+			for (int i = 0; i < workingSentences.length; i++) {
+				if (workingSentences[i].indexOf(word) >= 0
+						&& workingSentences[i].split(" ").length >= minWordsInSentence) {
+					outputSentences.add(actualSentences[i]);
+					break;
+				}
+				if (outputSentences.size() >= numSentences) {
+					break;
+				}
+			}
+			if (outputSentences.size() >= numSentences) {
+				break;
+			}
+
+		}
+		List<String> reorderedOutputSentences = reorderSentences(
+				outputSentences, input);
+		StringBuffer result = new StringBuffer("");
+		it = reorderedOutputSentences.iterator();
+		while (it.hasNext()) {
+			String sentence = it.next();
+			result.append(sentence);
+			result.append("."); // This isn't always correct - perhaps it should
+								// be whatever symbol the sentence finished with
+			if (it.hasNext()) {
+				result.append(" ");
+			}
+		}
+		return result.toString();
+	}
+
+	/**
+	 * @param outputSentences
+	 * @param input
+	 * @return
+	 */
+	private List<String> reorderSentences(Set<String> outputSentences,
+			final String input) {
+		// reorder the sentences to the order they were in the
+		// original text
+		ArrayList<String> result = new ArrayList<String>(outputSentences);
+
+		Collections.sort(result, new Comparator<Object>() {
+			public int compare(Object arg0, Object arg1) {
+				String sentence1 = (String) arg0;
+				String sentence2 = (String) arg1;
+
+				int indexOfSentence1 = input.indexOf(sentence1.trim());
+				int indexOfSentence2 = input.indexOf(sentence2.trim());
+				int result = indexOfSentence1 - indexOfSentence2;
+
+				return result;
+			}
+
+		});
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param input
+	 *            a String which may contain many sentences
+	 * @return an array of Strings, each element containing a sentence
+	 */
+	public static String[] getSentences(String input) {
+		if (input == null) {
+			return new String[0];
+		} else {
+			// split on a ".", a "!", a "?" followed by a space or EOL
+			return input.split("((\\.|!|\\?)+(\\s|\\z))|((\r\n)|(\n))");
+		}
+
+	}
+
+	/**
+	 * @see net.sf.classifier4J.summariser.ISummariser#getKeywords(java.lang.String,
+	 *      int)
+	 */
+	@SuppressWarnings("rawtypes")
+	public String[] getKeywords(String input, int numKeywords) {
+		// get the frequency of each word in the input
+
+		Map wordFrequencies = Utilities.getWordFrequency(input);
+
+		// System.out.println(wordFrequencies);
+
+		Set mostFrequentWords = getMostFrequentWords(numKeywords,
+				wordFrequencies);
+		// System.out.println(mostFrequentWords);
+		@SuppressWarnings("unchecked")
+		String[] results = (String[]) mostFrequentWords
+				.toArray(new String[mostFrequentWords.size()]);
+		if (results.length <= numKeywords) {
+			return results;
+		} else {
+			String[] newResults = new String[numKeywords];
+			System.arraycopy(results, 0, newResults, 0, numKeywords);
+			return newResults;
+		}
+	}
 
 }
