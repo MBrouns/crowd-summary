@@ -60,8 +60,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
-import javax.swing.text.Utilities;
+import net.sf.classifier4J.Utilities;
 
 import net.sf.classifier4J.ITokenizer;
 import net.sf.classifier4J.summariser.ISummariser;
