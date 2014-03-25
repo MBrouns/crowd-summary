@@ -93,6 +93,7 @@ public class CustomSummarizer implements ISummariser {
 
 		return tfidf;
 	}
+	
 
 	/**
 	 * 
@@ -151,8 +152,6 @@ public class CustomSummarizer implements ISummariser {
 		while (it.hasNext()) {
 			String sentence = it.next();
 			result.append(sentence);
-			result.append("."); // This isn't always correct - perhaps it should
-								// be whatever symbol the sentence finished with
 			if (it.hasNext()) {
 				result.append(" ");
 			}
