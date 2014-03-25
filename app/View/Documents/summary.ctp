@@ -20,15 +20,15 @@
                 }
                 ?></p>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default active" id="highlight-button">Highlight</button>
-                    <button type="button" class="btn btn-default" id="notes-button">Notes</button>
+                    <button type="button" class="btn btn-default" id="highlight-button">Highlight</button>
+                    <button type="button" class="btn btn-default active" id="notes-button">Notes</button>
                 </div>
 
                 <button type="button" class="btn btn-default right" id="removeAll-button">Remove All Highlights</button>                  
             </div>
         </div>
 
-        <div id="summary">
+        <div id="summary" rel="popover" data-container="#summary" data-trigger="manual" data-toggle="popover" data-placement="right" data-html="true" data-content="<textarea rows='4' cols='35'></textarea><div class='clear'></div><input class='btn btn-primary right' id='notes-save' type='button' value='Save' /><br/> " data-original-title="Insert your comment">
             <?php
             foreach ($document['Sentence'] as $sentence) {
                 echo "<span id='sentence" . $sentence['id'] . "'>" . $sentence['sentence'] . "</span><br/>";

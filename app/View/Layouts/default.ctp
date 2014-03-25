@@ -20,6 +20,8 @@
     ?>
     <?php echo $this->Html->script('jquery'); ?>
     <?php echo $this->Html->script('bootstrap.min'); ?>
+    <?php echo $this->Html->script('bootstrap-tooltip'); ?>
+    <?php echo $this->Html->script('bootstrap-popover'); ?>
     <?php echo $this->Html->script('scripts'); ?>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->

@@ -1,11 +1,20 @@
+notes = [];
+
+
 $(document).ready(function() {
 
 	// Action Buttons
 	mode = "Highlight";
+	$("#summary").css("cursor","text");
 	$(".btn-group button").click(function() {  
     	$(".btn-group button").not(this).removeClass('active');
     	$(this).toggleClass('active');
     	mode = $(this).text();
+    	if (mode == "Highlight") {
+    		$("#summary").css("cursor","text");
+    	} else {
+    		$("#summary").css("cursor","crosshair")
+    	}
 	});
 
 	// Initialize highlights
@@ -63,5 +72,52 @@ $(document).ready(function() {
 		$("#SummaryUserSentences").val(ids.toString());
 
 	});
+
+
+
+
+	$("#summary").popover({ container: '#summary' });
+	$("#summary span").click(function() {
+		if(mode == "Notes") {
+			id = $(this).attr("id").substr(8);
+			offset = $(this).offset().top;
+			
+			$("#summary").popover("show");
+			if( $("#note" + id).html() != undefined ) {
+				$(".popover textarea").val($("#note" + id).html());
+			}
+
+			$(".popover").css("top", offset-80 + "px");
+			$(".popover textarea").after("<input type='hidden' name='sentence-note-id' value='"+ id +"' />");
+			$("#notes-save").click(function() {
+				obj = new Object();
+				obj.sentence = $(this).prev().prev().val();
+				obj.note = $(this).prev().prev().prev().val();
+				
+				$("#summary").popover("hide");
+
+				// Display note
+				if( $("#note" + id).val() == undefined ) {
+					note = "<div class='alert alert-warning note' id='note"+ obj.sentence +"'>"+ obj.note +"</div>";
+					$("body").append(note);
+					$("#note" + obj.sentence).css("left", $("#summary").position().left + 960 + "px");
+					$("#note" + obj.sentence).css("top", offset-15);
+
+				} else {
+					$("#note" + id).html(obj.note.replace(/\n/g, '<br />'));
+					for (var i = notes.length - 1; i >= 0; i--) {
+						o = notes[i];
+						if (o.sentence == id) {
+							notes.splice(i, 1);
+						}
+					};
+				}
+				notes.push(obj);
+
+			});
+
+			
+		}
+	})
 
 });

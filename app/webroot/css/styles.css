@@ -24,3 +24,8 @@
 .highlighted {
 	background-color: rgb(255, 255, 123);
 }
+
+.note{
+	position: absolute;
+	width:200px;
+}
