@@ -70,6 +70,9 @@ $(document).ready(function() {
 		$("#user-summary").html(html2);
 		
 		$("#SummaryUserSentences").val(ids.toString());
+		$("#SummaryUserNotes").val(JSON.stringify(notes));
+		
+
 
 	});
 

@@ -20,8 +20,8 @@
                 }
                 ?></p>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default" id="highlight-button">Highlight</button>
-                    <button type="button" class="btn btn-default active" id="notes-button">Notes</button>
+                    <button type="button" class="btn btn-default active" id="highlight-button">Highlight</button>
+                    <button type="button" class="btn btn-default" id="notes-button">Notes</button>
                 </div>
 
                 <button type="button" class="btn btn-default right" id="removeAll-button">Remove All Highlights</button>                  
@@ -38,6 +38,7 @@
         <?php
         echo $this->Form->create('Summary');
         echo $this->Form->hidden('user_sentences');
+        echo $this->Form->hidden('user_notes');
         echo $this->Form->submit('Save', array('class' => 'btn btn-primary right', 'id' => 'generate-button'));
         ?>
 
