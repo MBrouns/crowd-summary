@@ -343,7 +343,7 @@ class DocumentsController extends AppController {
             }
         }
 
-        return $auto_senteces;
+        return $auto_sentences;
     }
 
     /*
