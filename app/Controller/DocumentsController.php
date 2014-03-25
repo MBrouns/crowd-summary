@@ -30,17 +30,10 @@ class DocumentsController extends AppController {
                 ));
 
                 //create summary
-                $document = $this->Document->read(null, $this->Document->id);
-                if (empty($document['Sentence'])) {//generate summary                    
-                    //call java summarizer
-                    $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' ' . APP . 'webroot\crowdsum 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems
-                    $lastline = exec($cmd, $output, $returnVar);
-
-                    if (count($output) != 6) {//summarizer didn't output all 6 steps so sth is wrong
-                        $this->Session->setFlash(__('Automatic summarization failed.'));
-                    } else {
-                        $this->Session->setFlash(__('Succesfully created automatic summary'));
-                    }
+                if (!$this->create_summary_java($this->Document->id)) {
+                    $this->Session->setFlash(__('Automatic summarization failed.'));
+                } else {
+                    $this->Session->setFlash(__('Succesfully created automatic summary'));
                 }
 
                 return $this->redirect(array('controller' => 'documents', 'action' => 'info', $this->Document->id));
@@ -71,6 +64,33 @@ class DocumentsController extends AppController {
     }
 
     /*
+     * create summary using Java library
+     * 
+     * @param int docId
+     * @return boolean success or not
+     */
+
+    private function create_summary_java($docId) {
+        $this->Document->id = $docId;
+        if (!$this->Document->exists()) {
+            throw new NotFoundException(__('Invalid document id'));
+        }
+
+        $document = $this->Document->read(null, $this->Document->id);
+        if (empty($document['Sentence'])) {//generate summary                    
+            //call java summarizer
+            $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' ' . APP . 'webroot\crowdsum 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems
+            $lastline = exec($cmd, $output, $returnVar);
+            debug($output);
+            if (count($output) != 6) {//summarizer didn't output all 6 steps so sth is wrong
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    /*
      * Display summary and document to user
      * id = document id
      * mode = personal or automatic
@@ -85,21 +105,9 @@ class DocumentsController extends AppController {
         //save summary
         if ($this->request->is('post')) {
             if ($this->request->data['Summary']['user_sentences']) {
-                $ids = explode(',', $this->request->data['Summary']['user_sentences']);
-                $summary = array();
 
-                foreach ($ids as $key => $id) {
-                    $summary[] = array('user_id' => $this->Auth->user('id'), 'sentence_id' => $id);
-                }
-
-                //get old personal summary sentences
-                $oldSummary = $this->Summary->find('all', array('conditions' => array('Summary.user_id' => $this->Auth->user('id'), 'Sentence.document_id' => $this->Document->id)));
-                if (!empty($oldSummary)) {
-                    $oldIds = array();
-                    foreach ($oldSummary as $sentence) {
-                        $oldIds[] = $sentence['Sentence']['id'];
-                    }
-                }
+                $summary = $this->sentences_to_summary($this->request->data['Summary']['user_sentences']);
+                $oldIds = $this->get_old_ids($this->Document->id);
 
                 //delete old personal summary
                 if ($this->Summary->deleteAll(array('user_id' => $this->Auth->user('id')))) {
@@ -155,6 +163,45 @@ class DocumentsController extends AppController {
         } else {
             $this->set('mode', $mode);
         }
+    }
+
+    /*
+     * Convert sentences to summary format
+     */
+
+    private function sentences_to_summary($sentences) {
+        $ids = explode(',', $sentences);
+        $summary = array();
+
+        foreach ($ids as $key => $id) {
+            $summary[] = array('user_id' => $this->Auth->user('id'), 'sentence_id' => $id);
+        }
+
+        return $summary;
+    }
+
+    /*
+     * Get old summary ids
+     */
+
+    private function get_old_ids($docId) {
+        $this->Document->id = $docId;
+        if (!$this->Document->exists()) {
+            throw new NotFoundException(__('Invalid document id'));
+        }
+
+        //get old personal summary sentences
+        $oldSummary = $this->Summary->find('all', array('conditions' => array('Summary.user_id' => $this->Auth->user('id'), 'Sentence.document_id' => $this->Document->id)));
+        if (!empty($oldSummary)) {
+            $oldIds = array();
+            foreach ($oldSummary as $sentence) {
+                $oldIds[] = $sentence['Sentence']['id'];
+            }
+
+            return $oldIds;
+        }
+
+        return null;
     }
 
     /*
@@ -246,14 +293,11 @@ class DocumentsController extends AppController {
      */
 
     private function generate_summary($docId) {
-        $this->Document->id = $docId;
-        if (!$this->Document->exists()) {
-            throw new NotFoundException(__('Invalid document id'));
-        }
 
-        //get auto summary
-        $auto_sentences = $this->Summary->find('all', array('conditions' => array('Summary.user_id' => 0, 'Sentence.document_id' => $this->Document->id, 'Summary.ranking > ' => 0),
-            'orderBy' => 'Summary.ranking DESC', 'Summary.id'));
+        $auto_sentences = $this->get_auto_summary($docId);
+        if ($auto_sentences == false) {
+            return false;
+        }
 
         //get all users with this docID
         $users = $this->PersonalDocument->find('all', array('conditions' => array('document_id' => $this->Document->id)));
@@ -271,6 +315,35 @@ class DocumentsController extends AppController {
         $sum_size = ceil($total_sentences / count($users));
 
         return array_slice($auto_sentences, 0, $sum_size);
+    }
+
+    /*
+     * get automatically generated sentences
+     * 
+     * @param int docId
+     * 
+     * @return array automatically generated summary
+     */
+
+    private function get_auto_summary($docId) {
+        $this->Document->id = $docId;
+        if (!$this->Document->exists()) {
+            throw new NotFoundException(__('Invalid document id'));
+        }
+
+        //get auto summary
+        $auto_sentences = $this->Summary->find('all', array('conditions' => array('Summary.user_id' => 0, 'Sentence.document_id' => $this->Document->id, 'Summary.ranking > ' => 0),
+            'orderBy' => 'Summary.ranking DESC', 'Summary.id'));
+
+        if (empty($auto_sentences)) {//summary has not been generated yet         
+            if ($this->create_summary_java($this->Document->id) != false) {
+                $auto_sentences = $this->get_auto_summary($this->Document->id);
+            } else {
+                return false;
+            }
+        }
+
+        return $auto_senteces;
     }
 
     /*
