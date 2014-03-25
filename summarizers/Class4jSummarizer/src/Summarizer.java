@@ -57,7 +57,7 @@ public class Summarizer {
 			while (rsDocumentSummarized.next()) {
 				System.out.println("Document already summarized, aborting");
 				System.exit(1);
-			}
+			}	
 
 			PreparedStatement sqlSelectDocumentText = c
 					.prepareStatement("Select [fulltext] FROM documents WHERE id = ?;");
@@ -70,11 +70,11 @@ public class Summarizer {
 
 			CustomSummarizer summariser = new CustomSummarizer();
 			//No. of lines is the sqrt of the number of sentences
-			int noOfLines = (int) Math.ceil(Math.sqrt(CustomSummarizer
-					.getSentencesRegex(input).length));
+			String[] allSentences = CustomSummarizer.getSentencesStanford(input);
+			int noOfLines = (int) Math.ceil(Math.sqrt(allSentences.length));
+			
 			String result = summariser.summarise(input, noOfLines);
-			String[] resultSentences = CustomSummarizer.getSentencesRegex(result);
-			String[] allSentences = CustomSummarizer.getSentencesRegex(input);
+			String[] resultSentences = CustomSummarizer.getSentencesStanford(result);
 			System.out
 					.println("Summary sentences found, inserting into database");
 
