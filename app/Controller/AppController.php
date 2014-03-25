@@ -34,11 +34,7 @@ class AppController extends Controller {
     
     public $components = array(
         'Session',
-        'Auth' => array(
-            'loginRedirect' => array(
-                'controller' => 'posts',
-                'action' => 'index'
-            ),
+        'Auth' => array(            
             'logoutRedirect' => array(
                 'controller' => 'pages',
                 'action' => 'display',
@@ -49,7 +45,8 @@ class AppController extends Controller {
     
     public function beforeFilter() {
         $this->Auth->allow('display');//allow displaying pages for all users
-        $user = $this->Auth->user();
+        $user = $this->Auth->user('id');
+        //debug($user);
         $this->set(compact('user'));
     }
 }

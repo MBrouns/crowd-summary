@@ -29,7 +29,6 @@ class DocumentsController extends AppController {
                     'Document' => array('id' => $this->Document->id),
                 ));
 
-
                 //create summary
                 $document = $this->Document->read(null, $this->Document->id);
                 if (empty($document['Sentence'])) {//generate summary                    
@@ -174,44 +173,9 @@ class DocumentsController extends AppController {
         if ($oldIds != null) {
             $missing = array_diff($oldIds, $ids);
             $new = array_diff($ids, $oldIds);
-
-            foreach ($generated_sum as $sentence => $data) {
-                //all missing get -1 in ranking            
-                if (in_array($data['Summary']['sentence_id'], $missing)) {
-                    $generated_sum[$sentence]['Summary']['ranking'] = $generated_sum[$sentence]['Summary']['ranking'] - 1;
-                }
-
-                //all new get +1 in ranking
-                if (in_array($data['Summary']['sentence_id'], $new)) {
-                    $generated_sum[$sentence]['Summary']['ranking'] = $generated_sum[$sentence]['Summary']['ranking'] + 1;
-                    //remove ids that have been added to ranking
-                    $new = array_diff(array($data['Summary']['sentence_id']), $new);
-                }
-
-            }
-
-            //add new ids from personal summary to generated summary
-            foreach ($new as $id) {
-                $generated_sum[]['Summary'] = array('user_id' => 0, 'sentence_id' => $id, 'ranking' => 1);
-            }
+            $generated_sum = $this->ranking_edit($generated_sum, $new, $missing);
         } else {//no old ids
-            foreach ($generated_sum as $sentence => $data) {
-                //See if there is a difference between generated summary and personal summary
-                if (in_array($data['Summary']['sentence_id'], $ids)) {
-                    $generated_sum[$sentence]['Summary']['ranking'] = $generated_sum[$sentence]['Summary']['ranking'] + 1;
-
-                    //remove ids that have been added to ranking
-                    $ids = array_diff($ids, array($data['Summary']['sentence_id']));
-                } else {
-                    $generated_sum[$sentence]['Summary']['ranking'] = $generated_sum[$sentence]['Summary']['ranking'] - 1;
-                }
-            }
-
-            //add new ids from personal summary to generated summary
-            foreach ($ids as $id) {
-                // $this->Sentence->find();
-                $generated_sum[]['Summary'] = array('user_id' => 0, 'sentence_id' => $id, 'ranking' => 1);
-            }
+            $generated_sum = $this->initial_ranking($generated_sum, $ids);
         }
 
         //save generated summary
@@ -220,6 +184,59 @@ class DocumentsController extends AppController {
         }
 
         return true;
+    }
+
+    /*
+     * Edit generated ranking
+     */
+
+    private function ranking_edit($generated_sum = array(), $new, $missing) {
+        foreach ($generated_sum as $sentence => $data) {
+            //all missing get -1 in ranking            
+            if (in_array($data['Summary']['sentence_id'], $missing)) {
+                $generated_sum[$sentence]['Summary']['ranking'] = $generated_sum[$sentence]['Summary']['ranking'] - 1;
+            }
+
+            //all new get +1 in ranking
+            if (in_array($data['Summary']['sentence_id'], $new)) {
+                $generated_sum[$sentence]['Summary']['ranking'] = $generated_sum[$sentence]['Summary']['ranking'] + 1;
+                //remove ids that have been added to ranking
+                $new = array_diff(array($data['Summary']['sentence_id']), $new);
+            }
+        }
+
+        //add new ids from personal summary to generated summary
+        foreach ($new as $id) {
+            $generated_sum[]['Summary'] = array('user_id' => 0, 'sentence_id' => $id, 'ranking' => 1);
+        }
+
+        return $generated_sum;
+    }
+
+    /*
+     * Create initial ranking
+     */
+
+    private function initial_ranking($generated_summary = array(), $ids) {
+        foreach ($generated_sum as $sentence => $data) {
+            //See if there is a difference between generated summary and personal summary
+            if (in_array($data['Summary']['sentence_id'], $ids)) {
+                $generated_sum[$sentence]['Summary']['ranking'] = $generated_sum[$sentence]['Summary']['ranking'] + 1;
+
+                //remove ids that have been added to ranking
+                $ids = array_diff($ids, array($data['Summary']['sentence_id']));
+            } else {
+                $generated_sum[$sentence]['Summary']['ranking'] = $generated_sum[$sentence]['Summary']['ranking'] - 1;
+            }
+        }
+
+        //add new ids from personal summary to generated summary
+        foreach ($ids as $id) {
+            // $this->Sentence->find();
+            $generated_sum[]['Summary'] = array('user_id' => 0, 'sentence_id' => $id, 'ranking' => 1);
+        }
+
+        return $generated_sum;
     }
 
     /*

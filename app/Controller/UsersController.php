@@ -5,19 +5,20 @@
  */
 
 class UsersController extends AppController {
-    
+
     public $uses = array('PersonalDocument', 'User');
-    
+
     public function beforeFilter() {
         parent::beforeFilter();
         // Allow users to register and logout.
         $this->Auth->allow('add', 'logout');
     }
-    
+
     public function login() {
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
-                return $this->redirect($this->Auth->redirect());
+                $this->Session->setFlash(__('Succesfully logged in'));
+                return $this->redirect($this->referer());
             }
             $this->Session->setFlash(__('Invalid username or password, try again'));
         }
@@ -37,9 +38,9 @@ class UsersController extends AppController {
         if (!$this->User->exists()) {
             throw new NotFoundException(__('Invalid user'));
         }
-        
+
         //get all documents from user
-        $data = $this->PersonalDocument->find('all', array('conditions' => array('PersonalDocument.user_id' => $this->User->id)));  
+        $data = $this->PersonalDocument->find('all', array('conditions' => array('PersonalDocument.user_id' => $this->User->id)));
         $this->set('data', $data);
     }
 
