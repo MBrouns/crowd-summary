@@ -6,7 +6,7 @@
 
 class DocumentsController extends AppController {
 
-    public $uses = array('PersonalDocument', 'Document', 'Summary', 'Sentence');
+    public $uses = array('PersonalDocument', 'Document', 'Summary', 'Sentence', 'Note');
 
     /*
      * Overview of all documents
@@ -81,7 +81,6 @@ class DocumentsController extends AppController {
             //call java summarizer
             $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' ' . APP . 'webroot\crowdsum 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems
             $lastline = exec($cmd, $output, $returnVar);
-            debug($output);
             if (count($output) != 6) {//summarizer didn't output all 6 steps so sth is wrong
                 return false;
             } else {
@@ -105,44 +104,12 @@ class DocumentsController extends AppController {
         //save summary
         if ($this->request->is('post')) {
             if ($this->request->data['Summary']['user_sentences']) {
-
-                $summary = $this->sentences_to_summary($this->request->data['Summary']['user_sentences']);
-                $oldIds = $this->get_old_ids($this->Document->id);
-
-                //delete old personal summary
-                if ($this->Summary->deleteAll(array('user_id' => $this->Auth->user('id')))) {
-
-                    //save new personal summary
-                    if ($this->Summary->saveMany($summary)) {
-                        $personalDocument = $this->PersonalDocument->find('first', array('conditions' => array('user_id' => $this->Auth->user('id'), 'document_id' => $this->Document->id)));
-
-                        //find out if user created summary before
-                        if (!empty($personalDocument)) {
-                            $this->PersonalDocument->id = $personalDocument['PersonalDocument']['id'];
-                        }
-
-                        //join user to document
-                        if ($this->PersonalDocument->save(array('user_id' => $this->Auth->user('id'), 'document_id' => $this->Document->id))) {
-                            $this->Session->setFlash(__('Your personal summary has been saved'));
-
-                            //update ranking
-                            if (!$this->update_ranking($ids, (isset($oldIds) ? $oldIds : null))) {
-                                $this->Session->setFlash(__('Ranking could not be updated'));
-                            }
-                        } else {
-                            $this->Session->setFlash(__('Personal document could not be saved'));
-                        }
-                    } else {
-                        $this->Session->setFlash(__('Summary could not be saved'));
-                    }
-                } else {
-                    $this->Session->setFlash(__('Old summary could not be deleted'));
-                }
+                $this->save_personal_summary($this->Document->id, $this->request->data['Summary']['user_sentences']);
+            }
+            if ($this->request->data['Summary']['user_notes']) {
+                $this->save_notes($this->request->data['Summary']['user_notes']);
             }
         }
-
-        //display document
-        $this->set('document', $this->Document->read(null, $this->Document->id));
 
         //see if user has personal summary
         $user = $this->Auth->user();
@@ -154,23 +121,94 @@ class DocumentsController extends AppController {
             $mode = 'automatic';
         }
 
-        //Get generated summary
-        $generated = $this->generate_summary($this->Document->id);
-        $this->set('generated_summary', $generated);
-
         if (isset($forceMode)) {
             $this->set('mode', $forceMode);
         } else {
             $this->set('mode', $mode);
         }
+        
+        //set template vars
+        $this->set('document', $this->Document->read(null, $this->Document->id));
+        $this->set('generated_summary', $this->generate_summary($this->Document->id));
+        $this->set('notes', $this->Note->find('all', array('conditions' => array('Sentence.document_id' => $this->Document->id))));
+    }
+
+    /*
+     * Function to save personal summary
+     */
+
+    private function save_personal_summary($docId, $user_sentences) {
+        $this->Document->id = $docId;
+        if (!$this->Document->exists()) {
+            throw new NotFoundException(__('Invalid document id'));
+        }
+
+        $ids = explode(',', $user_sentences);
+        $summary = $this->sentences_to_summary($ids);
+        $oldIds = $this->get_old_ids($this->Document->id);
+
+        //delete old personal summary
+        if ($this->Summary->deleteAll(array('user_id' => $this->Auth->user('id')))) {
+
+            //save new personal summary
+            if ($this->Summary->saveMany($summary)) {
+                $personalDocument = $this->PersonalDocument->find('first', array('conditions' => array('user_id' => $this->Auth->user('id'), 'document_id' => $this->Document->id)));
+
+                //find out if user created summary before
+                if (!empty($personalDocument)) {
+                    $this->PersonalDocument->id = $personalDocument['PersonalDocument']['id'];
+                }
+
+                //join user to document
+                if ($this->PersonalDocument->save(array('user_id' => $this->Auth->user('id'), 'document_id' => $this->Document->id))) {
+                    $this->Session->setFlash(__('Your personal summary has been saved'));
+
+                    //update ranking
+                    if (!$this->update_ranking($ids, (isset($oldIds) ? $oldIds : null))) {
+                        $this->Session->setFlash(__('Ranking could not be updated'));
+                    }
+                } else {
+                    $this->Session->setFlash(__('Personal document could not be saved'));
+                }
+            } else {
+                $this->Session->setFlash(__('Summary could not be saved'));
+            }
+        } else {
+            $this->Session->setFlash(__('Old summary could not be deleted'));
+        }
+
+        return;
+    }
+
+    /*
+     * Function to save user notes
+     */
+
+    private function save_notes($notes) {
+        $notes = json_decode($notes);
+        $toSave = array();
+        foreach ($notes as $note) {
+            $toSave[]['Note']['sentence_id'] = $note->sentence;
+            end($toSave);
+            $key = key($toSave);
+            $toSave[$key]['Note']['note'] = $note->note;
+        }
+        
+        //delete old notes to prevent doubles and obsolete notes
+        $this->Note->deleteAll(array('Sentence.document_id' => $this->Document->id));
+        
+        if (!$this->Note->saveMany($toSave)) {
+            $this->Session->setFlash(__('Notes could not be saved'));
+        }
+
+        return true;
     }
 
     /*
      * Convert sentences to summary format
      */
 
-    private function sentences_to_summary($sentences) {
-        $ids = explode(',', $sentences);
+    private function sentences_to_summary($ids) {
         $summary = array();
 
         foreach ($ids as $key => $id) {
