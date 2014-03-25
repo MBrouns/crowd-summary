@@ -115,9 +115,9 @@ public class CustomSummarizer implements ISummariser {
 		// workingSentences is used for the analysis, but
 		// actualSentences is used in the results so that the
 		// capitalisation will be correct.
-		String[] workingSentences = getSentencesRegex(input.toLowerCase());
+		String[] workingSentences = getSentencesStanford(input.toLowerCase());
 
-		String[] actualSentences = getSentencesRegex(input);
+		String[] actualSentences = getSentencesStanford(input);
 		/*
 		 * System.err.println("Sentences"); for (int i = 0; i <
 		 * actualSentences.length; i++) {
