@@ -69,11 +69,12 @@ public class Summarizer {
 			}
 
 			CustomSummarizer summariser = new CustomSummarizer();
-			int noOfLines = (int) Math.floor(CustomSummarizer
-					.getSentences(input).length * 0.1);
+			//No. of lines is the sqrt of the number of sentences
+			int noOfLines = (int) Math.ceil(Math.sqrt(CustomSummarizer
+					.getSentencesRegex(input).length));
 			String result = summariser.summarise(input, noOfLines);
-			String[] resultSentences = CustomSummarizer.getSentences(result);
-			String[] allSentences = CustomSummarizer.getSentences(input);
+			String[] resultSentences = CustomSummarizer.getSentencesRegex(result);
+			String[] allSentences = CustomSummarizer.getSentencesRegex(input);
 			System.out
 					.println("Summary sentences found, inserting into database");
 
