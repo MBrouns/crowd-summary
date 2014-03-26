@@ -76,14 +76,20 @@ $(document).ready(function() {
 
 	});
 
+	// Initialize notes
+	for (var i = notes.length - 1; i >= 0; i--) {
+		obj = notes[i];
+		offset = $("#sentence" + obj.sentence).offset().top;
+		displayNote(notes[i], offset);
+	};
 
 
 
 	$("#summary").popover({ container: '#summary' });
 	$("#summary span").click(function() {
 		if(mode == "Notes") {
-			id = $(this).attr("id").substr(8);
-			offset = $(this).offset().top;
+			var id = $(this).attr("id").substr(8);
+			var offset = $(this).offset().top;
 			
 			$("#summary").popover("show");
 			if( $("#note" + id).html() != undefined ) {
@@ -99,28 +105,31 @@ $(document).ready(function() {
 				
 				$("#summary").popover("hide");
 
-				// Display note
-				if( $("#note" + id).val() == undefined ) {
-					note = "<div class='alert alert-warning note' id='note"+ obj.sentence +"'>"+ obj.note +"</div>";
-					$("body").append(note);
-					$("#note" + obj.sentence).css("left", $("#summary").position().left + 960 + "px");
-					$("#note" + obj.sentence).css("top", offset-15);
-
-				} else {
-					$("#note" + id).html(obj.note.replace(/\n/g, '<br />'));
-					for (var i = notes.length - 1; i >= 0; i--) {
-						o = notes[i];
-						if (o.sentence == id) {
-							notes.splice(i, 1);
-						}
-					};
-				}
+				displayNote(obj, offset);
 				notes.push(obj);
 
 			});
 
 			
 		}
-	})
+	});
+
+	function displayNote(obj,offset) {
+		if( $("#note" + obj.sentence).val() == undefined ) {
+			note = "<div class='alert alert-warning note' id='note"+ obj.sentence +"'>"+ obj.note.replace(/\n/g, "<br />") +"</div>";
+			$("body").append(note);
+			$("#note" + obj.sentence).css("left", $("#summary").position().left + 960 + "px");
+			$("#note" + obj.sentence).css("top", offset-15);
+
+		} else {
+			$("#note" + obj.sentence).html(obj.note.replace(/\n/g, "<br />"));
+			for (var i = notes.length - 1; i >= 0; i--) {
+				o = notes[i];
+				if (o.sentence == obj.sentence) {
+					notes.splice(i, 1);
+				}
+			};
+		}
+	}
 
 });

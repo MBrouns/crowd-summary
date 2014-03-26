@@ -55,16 +55,27 @@
 
 <script type="text/javascript">
     var highlights = [];
+    var notes = []
 <?php
+// Add highlights to Javascript
 if ($mode == 'personal') {
 	$highlightsJS = $personal_summary;
 } else {
 	$highlightsJS = $generated_summary;
 }
 
-
 foreach ($highlightsJS as $sentence) {
     echo "highlights.push('" . addslashes($sentence['Summary']['sentence_id']) . "');\n";
+}
+
+// Add notes to javascript
+foreach ($notes as $note) {
+?>
+obj = new Object();
+obj.sentence = <?php echo $note["Note"]["sentence_id"]; ?>;
+obj.note = <?php echo '"'. str_replace("\n", "\\n", $note["Note"]["note"]) .'"'; ?>;
+notes.push(obj);
+<?php
 }
 ?>
 </script>
