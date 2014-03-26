@@ -51,26 +51,23 @@
 
 import java.io.Reader;
 import java.io.StringReader;
-import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
+import net.sf.classifier4J.ITokenizer;
+import net.sf.classifier4J.Utilities;
+import net.sf.classifier4J.summariser.ISummariser;
 import edu.stanford.nlp.process.CoreLabelTokenFactory;
 import edu.stanford.nlp.process.DocumentPreprocessor;
 import edu.stanford.nlp.process.PTBTokenizer;
 import edu.stanford.nlp.process.TokenizerFactory;
 import edu.stanford.nlp.util.StringUtils;
-import net.sf.classifier4J.Utilities;
-import net.sf.classifier4J.ITokenizer;
-import net.sf.classifier4J.summariser.ISummariser;
 
 public class CustomSummarizer implements ISummariser {
 
@@ -179,49 +176,13 @@ public class CustomSummarizer implements ISummariser {
 	}
 
 	/**
-	 * Splits the string input into sentences using a basic regex.
-	 * 
-	 * @param input
-	 *            a String which may contain many sentences
-	 * @return an array of Strings, each element containing a sentence
-	 */
-	public static String[] getSentencesRegex(String input) {
-		if (input == null) {
-			return new String[0];
-		} else {
-			// split on a ".", a "!", a "?" followed by a space or EOL
-			return input.split("((\\.|!|\\?)+(\\s|\\z))|((\r\n)|(\n))");
-		}
-
-	}
-
-	/**
-	 * Splits the string input into sentences using the java BreakIterator.
-	 * Locale is set to US.
-	 * 
-	 * @param input
-	 *            A String which may contain many sentences
-	 * @return Sentences from input split into an array of strings
-	 */
-	public static String[] getSentencesBI(String input) {
-		BreakIterator iterator = BreakIterator.getSentenceInstance(Locale.US);
-		iterator.setText(input);
-		int start = iterator.first();
-		ArrayList<String> sentences = new ArrayList<String>();
-		for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator
-				.next()) {
-			sentences.add(input.substring(start, end));
-		}
-		return sentences.toArray(new String[0]);
-	}
-
-	/**
 	 * Gets sentences from input using the StanfordNLP DocumentPreprocessor
 	 * 
 	 * @param input
 	 *            A String which may contain many sentences
 	 * @return Sentences from input split into an array of strings
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static String[] getSentencesStanford(String input) {
 		Reader reader = new StringReader(input);
 		final TokenizerFactory tf = PTBTokenizer
@@ -237,36 +198,7 @@ public class CustomSummarizer implements ISummariser {
 
 		return sentenceList.toArray(new String[0]);
 	}
-	
-	/**
-	 * Prints results from the 3 sentence splitters for simple input
-	 */
-	public static void testSentenceSplitters() {
-		String source = "This is a test. This is a T.L.A. test? Hello, Dr. Jones, wow!";
 
-		String[] result1 = getSentencesRegex(source);
-		System.out.println("Result 1:");
-		for (String s : result1) {
-			System.out.println(s);
-		}
-		System.out.println();
-
-		String[] result2 = getSentencesBI(source);
-
-		System.out.println("Result 2:");
-		for (String s : result2) {
-			System.out.println(s);
-		}
-		System.out.println();
-
-		String[] result3 = getSentencesStanford(source);
-
-		System.out.println("Result 3:");
-		for (String s : result3) {
-			System.out.println(s);
-		}
-
-	}
 
 	/**
 	 * @see net.sf.classifier4J.summariser.ISummariser#getKeywords(java.lang.String,

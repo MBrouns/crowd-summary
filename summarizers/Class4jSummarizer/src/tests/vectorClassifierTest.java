@@ -16,6 +16,10 @@ import net.sf.classifier4J.vector.VectorClassifier;
 
 /**
  * @author Matthijs Brouns
+ * 
+ * Small test to see how Classifier4J's vector classifier works.
+ * 
+ * It seems that it is not possible to train the classifier on more than one sentence, making it completely useless for our application
  *
  */
 public class vectorClassifierTest {
