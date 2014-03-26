@@ -39,7 +39,7 @@ public class Classifier {
 		
 		//TODO: Get irrelevent sentences from db and add to trainingData
 		
-		this.trainingData.add(makeSentence("", true));
+		//this.trainingData.add(makeSentence(, true));
 	}
 	
 	/**
@@ -48,7 +48,7 @@ public class Classifier {
 	 * @param sentence
 	 * @return
 	 */
-	protected  static Datum<String, String> makeSentence(String sentence) {
+	protected  static Datum<String, String> makeSentence(classifierSentence sentence) {
 		return makeSentence(sentence, true);
 	}
 	
@@ -60,7 +60,7 @@ public class Classifier {
 	 * @param relevant
 	 * @return
 	 */
-	protected  static Datum<String, String> makeSentence(String sentence, boolean relevant) {
+	protected  static Datum<String, String> makeSentence(classifierSentence sentence, boolean relevant) {
 		List<String> features = new ArrayList<String>();
 		// Create content feature
 		features.add("CONTENT=" + sentence);
@@ -78,7 +78,7 @@ public class Classifier {
 	 * @param sentence
 	 * @return
 	 */
-	public boolean isRelevantSentence(String sentence){
+	public boolean isRelevantSentence(classifierSentence sentence){
 		if(this.classifier.classOf(makeSentence(sentence)).equals(RELEVANT)){
 			return true;
 		}else{
