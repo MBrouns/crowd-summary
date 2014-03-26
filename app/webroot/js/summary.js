@@ -51,8 +51,7 @@ $(document).ready(function() {
 				
 		//flavour 1: just use html of the highlighted document: BOOK STYLE
 		ids = [];
-		html1 = $("#summary").html();
-		$("#generated-summary").html(html1);		
+		html1 = $("#summary").html();	
 		
 		// flavour 2: only use the highlighted parts of the text
 		html2 = '';
@@ -67,10 +66,12 @@ $(document).ready(function() {
 			ids.push(id);
 
 		});
-		$("#user-summary").html(html2);
 		
 		$("#SummaryUserSentences").val(ids.toString());
 		$("#SummaryUserNotes").val(JSON.stringify(notes));
+
+
+		// call to PDF generation
 		
 
 

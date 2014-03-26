@@ -42,14 +42,6 @@
         echo $this->Form->submit('Save', array('class' => 'btn btn-primary right', 'id' => 'generate-button'));
         ?>
 
-        <div class="clearboth"></div>
-
-        <h1>Summary flavour 1</h1>
-        <div id="generated-summary" style="display:none"></div>
-
-        <h1>Summary flavour 2</h1>
-        <div id="user-summary"></div>
-
     </div>
 </div>
 
@@ -72,8 +64,8 @@ foreach ($highlightsJS as $sentence) {
 foreach ($notes as $note) {
 ?>
 obj = new Object();
-obj.sentence = <?php echo $note["Note"]["sentence_id"]; ?>;
-obj.note = <?php echo '"'. str_replace("\n", "\\n", $note["Note"]["note"]) .'"'; ?>;
+obj.sentence = <?php echo $note["Note"]["sentence_id"] ?>;
+obj.note = <?php echo json_encode($note["Note"]["note"]) ?>;
 notes.push(obj);
 <?php
 }
