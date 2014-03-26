@@ -87,14 +87,6 @@ public class CustomSummarizer implements ISummariser {
 		return summariseInternal(input, numSentences, 5, null);
 	}
 
-	@SuppressWarnings("rawtypes")
-	public TreeMap tfIdfCalculator() {
-		TreeMap tfidf = new TreeMap();
-
-		return tfidf;
-	}
-	
-
 	/**
 	 * 
 	 * @param input
