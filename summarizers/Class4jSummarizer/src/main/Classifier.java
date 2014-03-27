@@ -55,7 +55,7 @@ public class Classifier {
 				int noOfRelevantSentences = (int) Math.ceil(Math.sqrt(rsGetDocuments
 						.getInt("noOfSentences")));
 				PreparedStatement sqlGetSentences = c
-						.prepareStatement("SELECT COUNT(users_sentences.id) AS times, sentences.id, sentences.sentence, sentences.document_id FROM users_sentences LEFT JOIN sentences ON sentences.id = users_sentences.sentence_id WHERE sentences.document_id = ? GROUP BY sentences.id ORDER BY times DESC");
+						.prepareStatement("SELECT COUNT(users_sentences.id) AS times, sentences.id, sentences.sentence, sentences.document_id FROM sentences LEFT JOIN users_sentences ON sentences.id = users_sentences.sentence_id WHERE sentences.document_id = ? GROUP BY sentences.id ORDER BY times DESC");
 				sqlGetSentences.setInt(1, rsGetDocuments.getInt("id"));
 
 				ResultSet rsGetSentences = sqlGetSentences.executeQuery();

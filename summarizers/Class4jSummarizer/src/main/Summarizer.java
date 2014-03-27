@@ -92,7 +92,7 @@ public class Summarizer {
 								"INSERT INTO sentences (document_id, sentence) VALUES (?, ?);",
 								Statement.RETURN_GENERATED_KEYS);
 				sqlAddSentence.setInt(1, docID);
-				sqlAddSentence.setString(2, s);
+				sqlAddSentence.setString(2, s.replaceAll("\\*NL\\*", "\n\n"));
 				sqlAddSentence.execute();
 
 			}
@@ -101,7 +101,7 @@ public class Summarizer {
 
 			System.out.println("Start generating keywords for document");
 
-			for (String s : summariser.getKeywords(input, 25)) {
+			for (String s : summariser.getKeywords(input, 5)) {
 				PreparedStatement sqlAddKeyword = c
 						.prepareStatement("INSERT INTO keywords (document_id, keyword) VALUES (?, ?)");
 				sqlAddKeyword.setInt(1, docID);
