@@ -19,7 +19,7 @@
                     echo ". " . $this->Html->link('Open own version.', array('controller' => 'documents', 'action' => 'summary', $document['Document']['id'], 'personal'));
                 }
                 ?></p>
-                <div class="btn-group">
+                <div class="btn-group" id="mode">
                     <button type="button" class="btn btn-default active" id="highlight-button">Highlight</button>
                     <button type="button" class="btn btn-default" id="notes-button">Notes</button>
                 </div>
@@ -34,13 +34,43 @@
                 echo "<span id='sentence" . $sentence['id'] . "'>" . $sentence['sentence'] . "</span><br/>";
             }
             ?>	
-        </div>        
+        </div>
+
+
         <?php
-        echo $this->Form->create('Summary');
-        echo $this->Form->hidden('user_sentences');
-        echo $this->Form->hidden('user_notes');
-        echo $this->Form->submit('Save', array('class' => 'btn btn-primary right', 'id' => 'generate-button'));
-        ?>
+	        echo $this->Form->create('Summary');
+	    ?>
+        <div class="options">
+        	<h3 class="left">Save summary</h3>    
+	        <?php
+	        echo $this->Form->hidden('user_sentences');
+	        echo $this->Form->hidden('user_notes');
+	        echo $this->Form->submit('Save', array('class' => 'btn btn-primary right', 'id' => 'save-button'));
+	        ?>
+	    </div>
+
+        <br/><br/><br/>
+
+        <div class="options">
+			<h3 class="left">Export summary</h3>
+			<?php
+	        echo $this->Form->hidden('pdf_type', array('value' => 0 ));
+	        echo $this->Form->hidden('pdf_notes', array('value' => 0 ));
+	        echo $this->Form->hidden('html');
+	        echo $this->Form->submit('Export', array('class' => 'btn btn-primary right', 'id' => 'export-button'));
+	        echo $this->Form->end();
+	        ?>
+	        <div class="btn-group right summary-options" id="div_pdf_notes">
+	  			<button type="button" class="btn btn-default active">Include notes</button>
+	  			<button type="button" class="btn btn-default">No notes</button>
+			</div>
+			<div class="btn-group right summary-options" id="div_pdf_type">
+	  			<button type="button" class="btn btn-default active">Whole document with highlights</button>
+	  			<button type="button" class="btn btn-default">Only Summary</button>
+			</div>
+		</div>
+		
+		
 
     </div>
 </div>

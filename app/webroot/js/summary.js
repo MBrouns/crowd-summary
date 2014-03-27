@@ -6,8 +6,8 @@ $(document).ready(function() {
 	// Action Buttons
 	mode = "Highlight";
 	$("#summary").css("cursor","text");
-	$(".btn-group button").click(function() {  
-    	$(".btn-group button").not(this).removeClass('active');
+	$("#mode").click(function() {  
+    	$("#mode").not(this).removeClass('active');
     	$(this).toggleClass('active');
     	mode = $(this).text();
     	if (mode == "Highlight") {
@@ -47,12 +47,12 @@ $(document).ready(function() {
 	});
 
 	// Gather user input highlights	
-	$("#generate-button").click( generate = function() {
-				
+	$("#save-button").click( generate = function() {
+
 		//flavour 1: just use html of the highlighted document: BOOK STYLE
 		ids = [];
-		html1 = $("#summary").html();	
-		
+		html1 = $("#summary").html();
+
 		// flavour 2: only use the highlighted parts of the text
 		html2 = '';
 		$.each($("#summary .highlighted"), function(i,val) {
@@ -69,9 +69,9 @@ $(document).ready(function() {
 		
 		$("#SummaryUserSentences").val(ids.toString());
 		$("#SummaryUserNotes").val(JSON.stringify(notes));
+		$("#SummaryHtml").html("");
 
 
-		// call to PDF generation
 		
 
 
@@ -132,5 +132,28 @@ $(document).ready(function() {
 			};
 		}
 	}
+
+	$(".options button").click(function() {  
+    	$(this).parent().find("button").not(this).removeClass('active');
+    	$(this).toggleClass('active');
+    	type = $(this).parent().attr("id").substring(4);
+    	if (type == "pdf_type") {
+    		$("#SummaryPdfType").val($(this).index());
+    	} else {
+    		$("#SummaryPdfNotes").val($(this).index());
+    	}
+    	
+	});
+
+	$("#export-button").click(function() {
+		pdftype = parseInt($("#SummaryPdfType").val());
+		generate();
+		if (pdftype == 0) {
+			$("#SummaryHtml").val(html1);
+		} else {
+			$("#SummaryHtml").val(html2);
+		}
+
+	});
 
 });

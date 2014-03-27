@@ -31,6 +31,7 @@
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 
 	Router::connect('/phpliteadmin.php', array('controller' => 'admin', 'action' => 'phplite'));
+	Router::parseExtensions('pdf');
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

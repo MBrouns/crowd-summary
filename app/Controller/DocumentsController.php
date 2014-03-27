@@ -109,6 +109,18 @@ class DocumentsController extends AppController {
             if ($this->request->data['Summary']['user_notes']) {
                 $this->save_notes($this->request->data['Summary']['user_notes']);
             }
+            if($this->request->data['Summary']['html']) {
+                if($this->request->data['Summary']['html'] != '') {
+                    require_once(APP . 'Vendor' . DS . 'dompdf' . DS . 'dompdf_config.inc.php'); 
+                    spl_autoload_register('DOMPDF_autoload');
+                    $html = '<html><body><style>.highlighted {background-color: rgb(255, 255, 123);}</style>' . $this->request->data['Summary']['html'] . '</body></html>';
+                    $dompdf = new DOMPDF();
+                    $dompdf->load_html($html);
+                    $dompdf->render();
+                    $dompdf->stream("summary.pdf");
+                }
+            }
+
         }
 
         //see if user has personal summary

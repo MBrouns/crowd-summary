@@ -17,6 +17,10 @@
 	float: right;
 }
 
+.left {
+	float: left;
+}
+
 .clearboth {
 	clear: both;
 }
@@ -28,4 +32,16 @@
 .note{
 	position: absolute;
 	width:200px;
+}
+
+#logout{
+	float:right;
+}
+
+.summary-options {
+	margin-right: 30px;
+}
+
+.options h3 {
+	margin: 0;
 }

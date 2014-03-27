@@ -29,7 +29,7 @@
 
                 <?php echo $this->Html->link('Sign up', array('controller' => 'users', 'action' => 'add'), array('class' => 'btn btn-primary')); ?>
             <?php else : ?>
-                <?php echo $this->Html->link('Sign out', array('controller' => 'users', 'action' => 'logout'), array('class' => 'btn btn-primary')); ?>
+                <?php echo $this->Html->link('Sign out', array('controller' => 'users', 'action' => 'logout'), array('class' => 'btn btn-primary', 'id' => 'logout')); ?>
             <?php endif; ?>
         </div>
     </div>
