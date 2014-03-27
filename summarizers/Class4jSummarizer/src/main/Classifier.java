@@ -1,3 +1,4 @@
+package main;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,6 +9,7 @@ import edu.stanford.nlp.classify.LinearClassifier;
 import edu.stanford.nlp.classify.LinearClassifierFactory;
 import edu.stanford.nlp.ling.BasicDatum;
 import edu.stanford.nlp.ling.Datum;
+import edu.stanford.nlp.stats.Counter;
 
 public class Classifier {
 
@@ -65,7 +67,9 @@ public class Classifier {
 					}else{
 						relevant = false;
 					}
-					this.trainingData.add(makeSentence(new ClassifierSentence(rsGetSentences.getInt("id")), relevant));
+					ClassifierSentence sentence = new ClassifierSentence(rsGetSentences.getInt("id"), this.c);
+					this.trainingData.add(makeSentence(sentence, relevant));
+					System.out.println("Added sentence to training: " + sentence.toString());
 					i++;
 				}
 			}
@@ -126,8 +130,8 @@ public class Classifier {
 	 * @param sentence
 	 * @return
 	 */
-	public double getSentenceRelevancy(ClassifierSentence sentence){
-		return this.classifier.scoresOf(makeSentence(sentence)).totalCount();
+	public Counter<String> getSentenceRelevancy(ClassifierSentence sentence){
+		return this.classifier.scoresOf(makeSentence(sentence));
 	}
 
 }
