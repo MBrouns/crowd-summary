@@ -69,7 +69,11 @@ public class Classifier {
 					}
 					ClassifierSentence sentence = new ClassifierSentence(rsGetSentences.getInt("id"), this.c);
 					this.trainingData.add(makeSentence(sentence, relevant));
-					System.out.println("Added sentence to training: " + sentence.toString());
+					if (relevant){
+						System.out.println("Added relevant sentence to training: " + sentence.toString());
+					}else{
+						System.out.println("Added non relevant sentence to training: " + sentence.toString());
+					}
 					i++;
 				}
 			}
