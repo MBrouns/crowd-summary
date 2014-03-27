@@ -45,6 +45,9 @@ public class TfIdf {
 
 			// don't calculate for terms we have already seen
 			if (!tfidf.containsKey(currentTerm)) {
+				if (currentTerm.equals("jewel")){
+					System.out.println("Break here");
+				}
 				tfidfValue = getTermFrequency(index, currentTerm) * calculateIDF(currentTerm);
 				tfidf.put(currentTerm, tfidfValue);
 			}
@@ -98,8 +101,18 @@ public class TfIdf {
 	 */
 	public double calculateTF(String[] totalTerms, String termToCheck) {
 		// TODO rework this to use Utilities.getWordFrequency??
-		double count = Utilities.countWords(termToCheck, totalTerms);
-		return count / totalTerms.length;
+		//double count = Utilities.countWords(termToCheck, totalTerms);
+		double count = 0;
+		for (String word : totalTerms) {
+		    if(word.equals(termToCheck)){
+		    	count++;
+		    }
+		}
+		if(termToCheck.equals("Alfred")){
+			System.out.println("brake here");
+			
+		}
+		return count / (double) totalTerms.length;
 	}
 
 	/**
@@ -124,7 +137,12 @@ public class TfIdf {
 				e.printStackTrace();
 			}
 		}
-		return Math.log(allTermLists.size() / count);
+		if(count == 0){
+			return 1;
+		}else{
+			return Math.log(allTermLists.size() / count);
+		}
+		
 	}
 	//
 }

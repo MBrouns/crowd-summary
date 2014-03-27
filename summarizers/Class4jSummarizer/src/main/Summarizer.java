@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -100,13 +101,54 @@ public class Summarizer {
 			System.out.println("Database insertion complete");
 
 			System.out.println("Start generating keywords for document");
-
-			for (String s : summariser.getKeywords(input, 5)) {
+			
+			
+			List<String[]> allTerms = new ArrayList<String[]>();
+			PreparedStatement sqlGetAllDocFulltext = c
+					.prepareStatement(
+							"SELECT fulltext FROM documents WHERE id != ?;");
+			sqlGetAllDocFulltext.setInt(1, docID);
+			ResultSet rsGetAllDocFullText = sqlGetAllDocFulltext.executeQuery();
+			
+			while (rsGetAllDocFullText.next()){
+				String[] termsInDoc = rsGetAllDocFullText.getString("fulltext").split("\\s+");
+				allTerms.add(termsInDoc);
+			}
+			
+			String[] termsInDoc = input.split("\\s+");
+			allTerms.add(termsInDoc);
+			
+			TfIdf tfidf = new TfIdf(allTerms);
+			TreeMap<Double, String> keywordList = new TreeMap<Double, String>(
+					new Comparator<Double>() {
+						public int compare(Double a, Double b) {
+							if (a > b) {
+								return -1;
+							} else if (a < b) {
+								return 1;
+							} else
+								return 0;
+						}
+					});
+			
+			for (Map.Entry<String, Double> entry : tfidf.getTfIdfList(allTerms.size()-1).entrySet()) {
+				String key = entry.getKey();
+				double value = entry.getValue();
+				keywordList.put(value, key);
+				
+			}
+			int keywordIterator = 0;
+			for (Map.Entry<Double, String> entry : keywordList.entrySet()) {
+				if(keywordIterator > 5){
+					break;
+				}
 				PreparedStatement sqlAddKeyword = c
 						.prepareStatement("INSERT INTO keywords (document_id, keyword) VALUES (?, ?)");
 				sqlAddKeyword.setInt(1, docID);
-				sqlAddKeyword.setString(2, s);
+				sqlAddKeyword.setString(2, entry.getValue());
 				sqlAddKeyword.execute();
+				keywordIterator++;
+				System.out.println(entry.getKey() + " => " + entry.getValue());
 			}
 			System.out.println("Keywords stored in database");
 			c.commit();
@@ -191,22 +233,6 @@ public class Summarizer {
 	}
 	
 
-	/**
-	 * Splits the string input into sentences using a basic regex.
-	 * 
-	 * @param input
-	 *            a String which may contain many sentences
-	 * @return an array of Strings, each element containing a sentence
-	 */
-	public static String[] getSentencesRegex(String input) {
-		if (input == null) {
-			return new String[0];
-		} else {
-			// split on a ".", a "!", a "?" followed by a space or EOL
-			return input.split("((\\.|!|\\?)+(\\s|\\z))|((\r\n)|(\n))");
-		}
-
-	}
 
 
 }
