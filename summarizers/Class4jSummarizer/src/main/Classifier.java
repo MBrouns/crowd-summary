@@ -131,8 +131,8 @@ public class Classifier {
 	 * @param sentence
 	 * @return
 	 */
-	public Counter<String> getSentenceRelevancy(ClassifierSentence sentence){
-		return this.classifier.scoresOf(makeSentence(sentence));
+	public double getSentenceRelevancy(ClassifierSentence sentence){
+		return (double) this.classifier.scoresOf(makeSentence(sentence)).values().toArray()[1];
 	}
 
 }
