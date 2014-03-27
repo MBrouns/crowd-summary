@@ -1,14 +1,26 @@
 package main;
+
 /**
  * 
  */
+import java.io.Reader;
+import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import edu.stanford.nlp.process.CoreLabelTokenFactory;
+import edu.stanford.nlp.process.DocumentPreprocessor;
+import edu.stanford.nlp.process.PTBTokenizer;
+import edu.stanford.nlp.process.TokenizerFactory;
+import edu.stanford.nlp.util.StringUtils;
 
 /**
  * @author mbrouns
@@ -58,7 +70,7 @@ public class Summarizer {
 			while (rsDocumentSummarized.next()) {
 				System.out.println("Document already summarized, aborting");
 				System.exit(1);
-			}	
+			}
 
 			PreparedStatement sqlSelectDocumentText = c
 					.prepareStatement("Select [fulltext] FROM documents WHERE id = ?;");
@@ -70,15 +82,10 @@ public class Summarizer {
 			}
 
 			CustomSummarizer summariser = new CustomSummarizer();
-			//No. of lines is the sqrt of the number of sentences
-			String[] allSentences = CustomSummarizer.getSentencesStanford(input);
+			// No. of lines is the sqrt of the number of sentences
+			String[] allSentences = getSentencesStanford(input);
 			int noOfLines = (int) Math.ceil(Math.sqrt(allSentences.length));
-			
-			String result = summariser.summarise(input, noOfLines);
-			String[] resultSentences = CustomSummarizer.getSentencesStanford(result);
-			System.out
-					.println("Summary sentences found, inserting into database");
-
+			System.out.println("noOfLines: " + noOfLines);
 			for (String s : allSentences) {
 				PreparedStatement sqlAddSentence = c
 						.prepareStatement(
@@ -87,24 +94,9 @@ public class Summarizer {
 				sqlAddSentence.setInt(1, docID);
 				sqlAddSentence.setString(2, s);
 				sqlAddSentence.execute();
-				if (Arrays.asList(resultSentences).contains(s)) {
-					ResultSet generatedKeys = sqlAddSentence.getGeneratedKeys();
-					if (generatedKeys.next()) {
-						try {
-							PreparedStatement sqlAddUserSentence = c
-									.prepareStatement("INSERT INTO users_sentences (user_id, sentence_id, ranking) VALUES (0, ?, 1)");
-							sqlAddUserSentence.setInt(1,
-									generatedKeys.getInt(1));
-							sqlAddUserSentence.execute();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					} else {
-						throw new SQLException("Adding sentence failed");
-					}
-				}
 
 			}
+
 			System.out.println("Database insertion complete");
 
 			System.out.println("Start generating keywords for document");
@@ -118,6 +110,53 @@ public class Summarizer {
 			}
 			System.out.println("Keywords stored in database");
 			c.commit();
+
+			PreparedStatement sqlSelectNewDocSentences = c
+					.prepareStatement("Select * FROM sentences WHERE document_id = ?;");
+			sqlSelectNewDocSentences.setInt(1, docID);
+
+			ResultSet rsGetNewDocSentences = sqlSelectNewDocSentences
+					.executeQuery();
+			TreeMap<Double, Integer> ratedSentences = new TreeMap<Double, Integer>(
+					new Comparator<Double>() {
+						public int compare(Double a, Double b) {
+							if (a > b) {
+								return -1;
+							} else if (a < b) {
+								return 1;
+							} else
+								return 0;
+						}
+					});
+
+			Classifier classifier = new Classifier(c);
+
+			while (rsGetNewDocSentences.next()) {
+				int sentenceID = rsGetNewDocSentences.getInt("id");
+				ClassifierSentence sentence = new ClassifierSentence(
+						sentenceID, c);
+
+				ratedSentences.put(classifier.getSentenceRelevancy(sentence),
+						sentenceID);
+			}
+			int i = 0;
+			for (Map.Entry<Double, Integer> entry : ratedSentences.entrySet()) {
+				double key = entry.getKey();
+				int value = entry.getValue();
+				
+				System.out.println(key + " => " + value);
+				if(i <= noOfLines){
+					PreparedStatement sqlAddUsersSentences = c
+							.prepareStatement("INSERT INTO users_sentences (user_id, sentence_id, ranking) VALUES (0, ?, 0)");
+					sqlAddUsersSentences.setInt(1, value);
+					sqlAddUsersSentences.execute();
+					System.out.println("added sentence to db");
+				}
+				
+				i++;
+			}
+			c.commit();
+
 			c.close();
 			System.out.println("Database connection closed");
 		} catch (Exception e) {
@@ -125,6 +164,30 @@ public class Summarizer {
 			System.exit(0);
 		}
 
+	}
+
+	/**
+	 * Gets sentences from input using the StanfordNLP DocumentPreprocessor
+	 * 
+	 * @param input
+	 *            A String which may contain many sentences
+	 * @return Sentences from input split into an array of strings
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static String[] getSentencesStanford(String input) {
+		Reader reader = new StringReader(input);
+		final TokenizerFactory tf = PTBTokenizer
+				.factory(new CoreLabelTokenFactory(),
+						"normalizeParentheses=false,normalizeOtherBrackets=false,invertible=true");
+		DocumentPreprocessor preProcessor = new DocumentPreprocessor(reader);
+		preProcessor.setTokenizerFactory(tf);
+
+		List<String> sentenceList = new ArrayList<String>();
+		for (List sentence : preProcessor) {
+			sentenceList.add(StringUtils.joinWithOriginalWhiteSpace(sentence));
+		}
+
+		return sentenceList.toArray(new String[0]);
 	}
 
 }
