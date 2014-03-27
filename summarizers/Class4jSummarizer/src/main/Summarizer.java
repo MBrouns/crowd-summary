@@ -178,7 +178,7 @@ public class Summarizer {
 		Reader reader = new StringReader(input);
 		final TokenizerFactory tf = PTBTokenizer
 				.factory(new CoreLabelTokenFactory(),
-						"normalizeParentheses=false,normalizeOtherBrackets=false,invertible=true");
+						"normalizeParentheses=false,normalizeOtherBrackets=false,invertible=true,tokenizeNLs=true");
 		DocumentPreprocessor preProcessor = new DocumentPreprocessor(reader);
 		preProcessor.setTokenizerFactory(tf);
 
