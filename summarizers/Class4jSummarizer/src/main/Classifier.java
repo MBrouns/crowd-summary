@@ -103,6 +103,7 @@ public class Classifier {
 		features.add("CONTENT=" + sentence.getContent());
 		features.add("LENGTH=" + sentence.getLength());
 		features.add("KEYWORDSIM=" + sentence.getKeywordSimilarity());
+		features.add("POSINDOC=" + sentence.getPosInDocument());
 		// TODO: Add more features here
 		// Create the label
 		String label = (relevant ? RELEVANT : NOT_RELEVANT);
