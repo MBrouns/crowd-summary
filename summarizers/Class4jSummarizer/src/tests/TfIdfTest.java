@@ -13,8 +13,8 @@ public class TfIdfTest {
 		// TODO Auto-generated method stub
 		
 		List<String[]> allTerms = new ArrayList<String[]>();
-		String[] anArray1 = {"hoi","hoi1","hoi2","hoi3","hoi4"};
-		String[] anArray2 = {"hoi","hoi2","hoi5","hoi6"};
+		String[] anArray1 = {"hoi","hoi1","hoi2","hoi2","hoi3","hoi3","hoi4"};
+		String[] anArray2 = {"hoi","hoi2","hoi5","hoi5","hoi6"};
 
 		allTerms.add(anArray1);
 		allTerms.add(anArray2);
@@ -22,7 +22,7 @@ public class TfIdfTest {
 		
 		TfIdf tfidf = new TfIdf(allTerms);
 		
-		for (Map.Entry<String, Double> entry : tfidf.getTfIdfList(1).entrySet()) {
+		for (Map.Entry<String, Double> entry : tfidf.getTfIdfList(0).entrySet()) {
 			String key = entry.getKey();
 			double value = entry.getValue();
 			
