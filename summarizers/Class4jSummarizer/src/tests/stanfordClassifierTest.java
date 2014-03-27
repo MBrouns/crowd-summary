@@ -62,10 +62,10 @@ public class stanfordClassifierTest {
 		classifier.dump();
 		// Test the classifier
 		System.out.println("Working instance got: "
-				+ classifier.classOf(workingLights));
+				+ classifier.scoresOf(workingLights));
 		classifier.justificationOf(workingLights);
 		System.out.println("Broken instance got: "
-				+ classifier.classOf(brokenLights));
+				+ classifier.scoresOf(brokenLights));
 		classifier.justificationOf(brokenLights);
 
 	}
