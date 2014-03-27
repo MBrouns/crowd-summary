@@ -48,7 +48,7 @@ public class Classifier {
 	 * @param sentence
 	 * @return
 	 */
-	protected  static Datum<String, String> makeSentence(classifierSentence sentence) {
+	protected  static Datum<String, String> makeSentence(ClassifierSentence sentence) {
 		return makeSentence(sentence, true);
 	}
 	
@@ -60,7 +60,7 @@ public class Classifier {
 	 * @param relevant
 	 * @return
 	 */
-	protected  static Datum<String, String> makeSentence(classifierSentence sentence, boolean relevant) {
+	protected  static Datum<String, String> makeSentence(ClassifierSentence sentence, boolean relevant) {
 		List<String> features = new ArrayList<String>();
 		// Create content feature
 		features.add("CONTENT=" + sentence);
@@ -78,7 +78,7 @@ public class Classifier {
 	 * @param sentence
 	 * @return
 	 */
-	public boolean isRelevantSentence(classifierSentence sentence){
+	public boolean isRelevantSentence(ClassifierSentence sentence){
 		if(this.classifier.classOf(makeSentence(sentence)).equals(RELEVANT)){
 			return true;
 		}else{

@@ -1,4 +1,4 @@
-public class classifierSentence {
+public class ClassifierSentence {
 
 	private int sentenceID;
 	private String content;
@@ -10,7 +10,7 @@ public class classifierSentence {
 	private boolean hasProperNouns;
 	
 	
-	public classifierSentence(int sentenceID) {
+	public ClassifierSentence(int sentenceID) {
 		super();
 		//TODO: Calculate this stuff
 		this.sentenceID = sentenceID;
