@@ -84,7 +84,7 @@ public class Summarizer {
 			CustomSummarizer summariser = new CustomSummarizer();
 			// No. of lines is the sqrt of the number of sentences
 			String[] allSentences = getSentencesStanford(input);
-			int noOfLines = (int) Math.ceil(Math.sqrt(allSentences.length));
+			int noOfLines = (int) Math.max((Math.ceil(Math.sqrt(allSentences.length))),0.1*allSentences.length);
 			System.out.println("noOfLines: " + noOfLines);
 			for (String s : allSentences) {
 				PreparedStatement sqlAddSentence = c
@@ -147,7 +147,7 @@ public class Summarizer {
 				System.out.println(key + " => " + value);
 				if(i <= noOfLines){
 					PreparedStatement sqlAddUsersSentences = c
-							.prepareStatement("INSERT INTO users_sentences (user_id, sentence_id, ranking) VALUES (0, ?, 0)");
+							.prepareStatement("INSERT INTO users_sentences (user_id, sentence_id, ranking) VALUES (0, ?, 1)");
 					sqlAddUsersSentences.setInt(1, value);
 					sqlAddUsersSentences.execute();
 					System.out.println("added sentence to db");
@@ -189,5 +189,24 @@ public class Summarizer {
 
 		return sentenceList.toArray(new String[0]);
 	}
+	
+
+	/**
+	 * Splits the string input into sentences using a basic regex.
+	 * 
+	 * @param input
+	 *            a String which may contain many sentences
+	 * @return an array of Strings, each element containing a sentence
+	 */
+	public static String[] getSentencesRegex(String input) {
+		if (input == null) {
+			return new String[0];
+		} else {
+			// split on a ".", a "!", a "?" followed by a space or EOL
+			return input.split("((\\.|!|\\?)+(\\s|\\z))|((\r\n)|(\n))");
+		}
+
+	}
+
 
 }
