@@ -9,7 +9,6 @@ import edu.stanford.nlp.classify.LinearClassifier;
 import edu.stanford.nlp.classify.LinearClassifierFactory;
 import edu.stanford.nlp.ling.BasicDatum;
 import edu.stanford.nlp.ling.Datum;
-import edu.stanford.nlp.stats.Counter;
 
 public class Classifier {
 
@@ -26,6 +25,7 @@ public class Classifier {
 	public Classifier(Connection c) {
 		this.c = c;
 		createTrainingData();
+		System.out.println("training data created");
 		LinearClassifierFactory<String, String> factory = new LinearClassifierFactory<String, String>();
 		factory.useConjugateGradientAscent();
 		// Turn on per-iteration convergence updates
