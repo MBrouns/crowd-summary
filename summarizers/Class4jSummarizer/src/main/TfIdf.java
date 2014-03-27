@@ -20,6 +20,9 @@ public class TfIdf {
 	public TfIdf(List<String[]> allTerms) {
 		allTermLists = allTerms;
 		termFrequencies = new ArrayList<TreeMap<String, Double>>();
+		for(int i = 0; i < allTermLists.size(); i++){
+			termFrequencies.add(i, new TreeMap<String, Double>());
+			}
 		this.calculateTermFrequencies();
 	}
 
@@ -111,8 +114,14 @@ public class TfIdf {
 	public double calculateIDF(String termToCheck) {
 		double count = 0;
 		for (int i = 0; i < termFrequencies.size(); i++) {
-			if (termFrequencies.get(i).get(termToCheck) > 0) {
-				count++;
+			try{
+				
+				if (termFrequencies.get(i).containsKey(termToCheck) && termFrequencies.get(i).get(termToCheck) > 0) {
+					count++;
+				}
+			}catch(Exception e){
+				System.out.println(termToCheck);
+				e.printStackTrace();
 			}
 		}
 		return Math.log(allTermLists.size() / count);
