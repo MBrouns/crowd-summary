@@ -108,7 +108,7 @@ public class Summarizer {
 
 			System.out.println("Start generating keywords for document");
 
-			for (String s : summariser.getKeywords(input, 3)) {
+			for (String s : summariser.getKeywords(input, 25)) {
 				PreparedStatement sqlAddKeyword = c
 						.prepareStatement("INSERT INTO keywords (document_id, keyword) VALUES (?, ?)");
 				sqlAddKeyword.setInt(1, docID);
