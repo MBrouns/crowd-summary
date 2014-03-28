@@ -10,7 +10,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -62,6 +61,8 @@ public class Summarizer {
 			c.setAutoCommit(false);
 			System.out.println("Database connection established");
 
+			
+			//Check if a summary already exists for the given document ID.
 			PreparedStatement sqlCheckDocumentSummarized = c
 					.prepareStatement("Select [document_id] FROM sentences WHERE document_id = ?;");
 			sqlCheckDocumentSummarized.setInt(1, docID);
@@ -73,6 +74,7 @@ public class Summarizer {
 				System.exit(1);
 			}
 
+			//Get fulltext as input for summarizer
 			PreparedStatement sqlSelectDocumentText = c
 					.prepareStatement("Select [fulltext] FROM documents WHERE id = ?;");
 			sqlSelectDocumentText.setInt(1, docID);
@@ -82,11 +84,13 @@ public class Summarizer {
 				input = rs.getString("fulltext");
 			}
 
-			CustomSummarizer summariser = new CustomSummarizer();
 			// No. of lines is the sqrt of the number of sentences
 			String[] allSentences = getSentencesStanford(input);
 			int noOfLines = (int) Math.max((Math.ceil(Math.sqrt(allSentences.length))),0.1*allSentences.length);
 			System.out.println("noOfLines: " + noOfLines);
+			
+			
+			//Add individual sentences to database sentences table
 			for (String s : allSentences) {
 				PreparedStatement sqlAddSentence = c
 						.prepareStatement(
@@ -103,6 +107,7 @@ public class Summarizer {
 			System.out.println("Start generating keywords for document");
 			
 			
+			//Get fulltext for all documents for use in tf-idf calculation
 			List<String[]> allTerms = new ArrayList<String[]>();
 			PreparedStatement sqlGetAllDocFulltext = c
 					.prepareStatement(
@@ -118,6 +123,7 @@ public class Summarizer {
 			String[] termsInDoc = input.split("\\s+");
 			allTerms.add(termsInDoc);
 			
+			//calculate tf-idf
 			TfIdf tfidf = new TfIdf(allTerms);
 			TreeMap<Double, String> keywordList = new TreeMap<Double, String>(
 					new Comparator<Double>() {
@@ -131,6 +137,7 @@ public class Summarizer {
 						}
 					});
 			
+			//Sort words based on tf-idf and select 5 highest rated words
 			for (Map.Entry<String, Double> entry : tfidf.getTfIdfList(allTerms.size()-1).entrySet()) {
 				String key = entry.getKey();
 				double value = entry.getValue();
@@ -171,6 +178,8 @@ public class Summarizer {
 						}
 					});
 
+			
+			//make new classifier instance and use it to put relevant sentences into the database
 			Classifier classifier = new Classifier(c);
 
 			while (rsGetNewDocSentences.next()) {

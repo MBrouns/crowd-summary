@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-import net.sf.classifier4J.Utilities;
-
 public class TfIdf {
 
 	private List<TreeMap<String, Double>> termFrequencies;

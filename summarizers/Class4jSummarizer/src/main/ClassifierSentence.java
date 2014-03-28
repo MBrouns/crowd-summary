@@ -29,13 +29,7 @@ public class ClassifierSentence {
 		super();
 		//TODO: Calculate this stuff
 		this.sentenceID = sentenceID;
-		this.content = content;
-		this.length = length;
-		this.posInDocument = posInDocument;
-		this.titleSimilarity = titleSimilarity;
-		this.keywordSimilarity = keywordSimilarity;
-		this.hasAnaphora = hasAnaphora;
-		this.hasProperNouns = hasProperNouns;
+		
 		try{
 			PreparedStatement sqlGetSentence = c
 					.prepareStatement("SELECT id, document_id, sentence FROM sentences WHERE id = ?");
