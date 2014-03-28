@@ -36,8 +36,9 @@ $(document).ready(function() {
 
 	// Remove all highlights
 	$("#removeAll-button").click(removeAll = function() {
-		$("#summary > span").removeClass("highlighted");
-	})
+		$("#summary span").removeClass("highlighted");
+		$("#summary span").css("background-color", "");
+	});
 
 	// Initialize user highlighter
 	$('#summary').textHighlighter( {
