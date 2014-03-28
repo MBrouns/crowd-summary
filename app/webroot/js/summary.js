@@ -6,8 +6,8 @@ $(document).ready(function() {
 	// Action Buttons
 	mode = "Highlight";
 	$("#summary").css("cursor","text");
-	$("#mode").click(function() {  
-    	$("#mode").not(this).removeClass('active');
+	$("#mode button").click(function() {  
+    	$("#mode button").not(this).removeClass('active');
     	$(this).toggleClass('active');
     	mode = $(this).text();
     	if (mode == "Highlight") {
@@ -117,20 +117,24 @@ $(document).ready(function() {
 
 	function displayNote(obj,offset) {
 		if( $("#note" + obj.sentence).val() == undefined ) {
-			note = "<div class='alert alert-warning note' id='note"+ obj.sentence +"'>"+ obj.note.replace(/\n/g, "<br />") +"</div>";
+			note = "<div class='alert alert-warning note' id='note"+ obj.sentence +"'>"+ obj.note.replace(/\n/g, "<br />") +"<span class='glyphicon glyphicon-remove'></span></div>";
 			$("body").append(note);
 			$("#note" + obj.sentence).css("left", $("#summary").position().left + 960 + "px");
 			$("#note" + obj.sentence).css("top", offset-15);
 
 		} else {
 			$("#note" + obj.sentence).html(obj.note.replace(/\n/g, "<br />"));
-			for (var i = notes.length - 1; i >= 0; i--) {
-				o = notes[i];
-				if (o.sentence == obj.sentence) {
-					notes.splice(i, 1);
-				}
-			};
+			
 		}
+	}
+
+	function removeNote(id) {
+		for (var i = notes.length - 1; i >= 0; i--) {
+			o = notes[i];
+			if (o.sentence == id) {
+				notes.splice(i, 1);
+			}
+		};
 	}
 
 	$(".options button").click(function() {  
@@ -154,6 +158,12 @@ $(document).ready(function() {
 			$("#SummaryHtml").val(html2);
 		}
 
+	});
+
+	$(".glyphicon-remove").click(function() {
+		id = $(this).parent().attr("id").substring(4);
+		removeNote(id);
+		$(this).parent().remove();
 	});
 
 });

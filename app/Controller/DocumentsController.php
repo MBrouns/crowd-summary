@@ -209,7 +209,7 @@ class DocumentsController extends AppController {
         //delete old notes to prevent doubles and obsolete notes
         $this->Note->deleteAll(array('Sentence.document_id' => $this->Document->id));
         
-        if (!$this->Note->saveMany($toSave)) {
+        if (!$this->Note->saveMany($toSave) and count($toSave) > 0) {
             $this->Session->setFlash(__('Notes could not be saved'));
         }
 
