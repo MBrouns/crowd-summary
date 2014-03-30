@@ -137,13 +137,11 @@ class DocumentsController extends AppController {
             $mode = 'personal';
         } else {
             $mode = 'automatic';
+            $this->set('personal_summary', array());
         }
 
         if (isset($forceMode)) {
             $this->set('mode', $forceMode);
-            if (empty($summary)) {
-                $this->set('personal_summary', array());
-            }
         } else {
             $this->set('mode', $mode);
         }

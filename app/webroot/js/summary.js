@@ -35,9 +35,22 @@ $(document).ready(function() {
 	});
 
 	// Remove all highlights
-	$("#removeAll-button").click(removeAll = function() {
+	$("#removeAll-highlights-button").click(removeAllHighlights = function() {
 		$("#summary span").removeClass("highlighted");
 		$("#summary span").css("background-color", "");
+	});
+
+	// Remove all notes
+	$("#removeAll-notes-button").click(removeAllNotes = function() {
+		
+		for (var i = notes.length - 1; i >= 0; i--) {
+			o = notes[i];
+			id = o.sentence;
+			$("#note" + o.sentence).remove();
+			removeNote(id);
+			
+		};
+
 	});
 
 	// Initialize user highlighter

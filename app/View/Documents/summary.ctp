@@ -16,15 +16,18 @@
                     if ($document['Document']['contributions'] > 0) {
                         echo ' and improved by ' . $document['Document']['contributions'] . ' users';
                     }
-                    echo ". " . $this->Html->link('Open own version.', array('controller' => 'documents', 'action' => 'summary', $document['Document']['id'], 'personal'));
+                    if (!empty($personal_summary) && !empty($notes)) {
+                    	echo ". " . $this->Html->link('Open own version.', array('controller' => 'documents', 'action' => 'summary', $document['Document']['id'], 'personal'));
+                    }
                 }
                 ?></p>
                 <div class="btn-group" id="mode">
                     <button type="button" class="btn btn-default active" id="highlight-button">Highlight</button>
                     <button type="button" class="btn btn-default" id="notes-button">Notes</button>
                 </div>
+                <button type="button" class="btn btn-default right" id="removeAll-notes-button">Remove All Comments</button>
+                <button type="button" class="btn btn-default right" id="removeAll-highlights-button">Remove All Highlights</button>
 
-                <button type="button" class="btn btn-default right" id="removeAll-button">Remove All Highlights</button>                  
             </div>
         </div>
 

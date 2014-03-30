@@ -65,3 +65,7 @@
 #pdf-summary{
 	display: none;
 }
+
+#removeAll-highlights-button {
+	margin-right: 5px;
+}
