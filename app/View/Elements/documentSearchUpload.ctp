@@ -30,7 +30,7 @@
     <div  class="col-md-6">
         <h2>...Or upload your own!</h2>
 
-        <?php echo $this->Form->create('Document', array('type' => 'file')); ?>       
+        <?php echo $this->Form->create(null, array('type' => 'file', 'url' => array('controller' => 'documents', 'action' => 'index'))); ?>       
 
         <div class="form-group">
             <?php echo $this->Form->file('Document.file'); ?>

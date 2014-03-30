@@ -109,25 +109,24 @@ class DocumentsController extends AppController {
                 $this->save_notes($this->request->data['Summary']['user_notes']);
             }
             // Export to PDF
-            if($this->request->data['Summary']['html']) {
-                if($this->request->data['Summary']['html'] != '') {
+            if ($this->request->data['Summary']['html']) {
+                if ($this->request->data['Summary']['html'] != '') {
                     $document = $this->Document->read(null, $this->Document->id);
-                    require_once(APP . 'Vendor' . DS . 'dompdf' . DS . 'dompdf_config.inc.php'); 
+                    require_once(APP . 'Vendor' . DS . 'dompdf' . DS . 'dompdf_config.inc.php');
                     spl_autoload_register('DOMPDF_autoload');
-                    $html = '<html><body><style>'.
-                    '.highlighted {background-color: rgb(255, 255, 123);}'.
-                    'h1 {font-size: 36px; margin-top: 20px; margin-bottom: 10px; color: rgb(51, 51, 51); }'.
-                    '.pdf-note {color: #616E14; border: solid 1px #BFD62F; background-color: #DAE691; border-radius: 6px; padding: 4px 20px; margin:0}'.
-                    '</style>'.
-                    '<h1>'.$document['Document']['title'].'</h1>'.
-                    $this->request->data['Summary']['html'] . '</body></html>';
+                    $html = '<html><body><style>' .
+                            '.highlighted {background-color: rgb(255, 255, 123);}' .
+                            'h1 {font-size: 36px; margin-top: 20px; margin-bottom: 10px; color: rgb(51, 51, 51); }' .
+                            '.pdf-note {color: #616E14; border: solid 1px #BFD62F; background-color: #DAE691; border-radius: 6px; padding: 4px 20px; margin:0}' .
+                            '</style>' .
+                            '<h1>' . $document['Document']['title'] . '</h1>' .
+                            $this->request->data['Summary']['html'] . '</body></html>';
                     $dompdf = new DOMPDF();
                     $dompdf->load_html($html);
                     $dompdf->render();
                     $dompdf->stream("summary.pdf");
                 }
             }
-
         }
 
         //see if user has personal summary
@@ -142,13 +141,13 @@ class DocumentsController extends AppController {
 
         if (isset($forceMode)) {
             $this->set('mode', $forceMode);
-            if(empty($summary)) {
+            if (empty($summary)) {
                 $this->set('personal_summary', array());
             }
         } else {
             $this->set('mode', $mode);
         }
-        
+
         //set template vars
         $this->set('document', $this->Document->read(null, $this->Document->id));
         $this->set('generated_summary', $this->generate_summary($this->Document->id));
@@ -182,6 +181,12 @@ class DocumentsController extends AppController {
                 //find out if user created summary before
                 if (!empty($personalDocument)) {
                     $this->PersonalDocument->id = $personalDocument['PersonalDocument']['id'];
+                } else {
+                    //update contributors
+                    if (!$this->update_contributors($this->Document->id)) {
+                        $this->Session->setFlash(__('Contributors could not be updated'));
+                    }
+                    die();
                 }
 
                 //join user to document
@@ -206,6 +211,27 @@ class DocumentsController extends AppController {
     }
 
     /*
+     * Add a contributor
+     * 
+     * @param int docId
+     */
+
+    public function update_contributors($docId) {
+        $this->Document->id = $docId;
+        if (!$this->Document->exists()) {
+            throw new NotFoundException(__('Invalid document id'));
+        }
+
+        $document = $this->Document->read(null, $this->Document->id);
+        $this->Document->set(array('contributions' => $document['Document']['contributions'] + 1));
+        if ($this->Document->save()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /*
      * Function to save user notes
      */
 
@@ -218,10 +244,10 @@ class DocumentsController extends AppController {
             $key = key($toSave);
             $toSave[$key]['Note']['note'] = $note->note;
         }
-        
+
         //delete old notes to prevent doubles and obsolete notes
         $this->Note->deleteAll(array('Sentence.document_id' => $this->Document->id));
-        
+
         if (!$this->Note->saveMany($toSave) and count($toSave) > 0) {
             $this->Session->setFlash(__('Notes could not be saved'));
         }
