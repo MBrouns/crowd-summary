@@ -100,7 +100,6 @@ class DocumentsController extends AppController {
         if (!$this->Document->exists()) {
             throw new NotFoundException(__('Invalid document id'));
         }
-
         //save summary
         if ($this->request->is('post')) {
             if ($this->request->data['Summary']['user_sentences']) {
@@ -109,11 +108,18 @@ class DocumentsController extends AppController {
             if ($this->request->data['Summary']['user_notes']) {
                 $this->save_notes($this->request->data['Summary']['user_notes']);
             }
+            // Export to PDF
             if($this->request->data['Summary']['html']) {
                 if($this->request->data['Summary']['html'] != '') {
+                    $document = $this->Document->read(null, $this->Document->id);
                     require_once(APP . 'Vendor' . DS . 'dompdf' . DS . 'dompdf_config.inc.php'); 
                     spl_autoload_register('DOMPDF_autoload');
-                    $html = '<html><body><style>.highlighted {background-color: rgb(255, 255, 123);}</style>' . $this->request->data['Summary']['html'] . '</body></html>';
+                    $html = '<html><body><style>'.
+                    '.highlighted {background-color: rgb(255, 255, 123);}'.
+                    'h1 {font-size: 36px; margin-top: 20px; margin-bottom: 10px; color: rgb(51, 51, 51); }'.
+                    '</style>'.
+                    '<h1>'.$document['Document']['title'].'</h1>'.
+                    $this->request->data['Summary']['html'] . '</body></html>';
                     $dompdf = new DOMPDF();
                     $dompdf->load_html($html);
                     $dompdf->render();
@@ -135,6 +141,9 @@ class DocumentsController extends AppController {
 
         if (isset($forceMode)) {
             $this->set('mode', $forceMode);
+            if(empty($summary)) {
+                $this->set('personal_summary', array());
+            }
         } else {
             $this->set('mode', $mode);
         }
