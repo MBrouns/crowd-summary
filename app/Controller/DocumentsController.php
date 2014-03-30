@@ -156,6 +156,9 @@ class DocumentsController extends AppController {
         }
 
         $ids = explode(',', $user_sentences);
+        if ($user_sentences == "None") {
+            $ids = [];
+        }
         $summary = $this->sentences_to_summary($ids);
         $oldIds = $this->get_old_ids($this->Document->id);
 
@@ -163,7 +166,7 @@ class DocumentsController extends AppController {
         if ($this->Summary->deleteAll(array('user_id' => $this->Auth->user('id')))) {
 
             //save new personal summary
-            if ($this->Summary->saveMany($summary)) {
+            if ($this->Summary->saveMany($summary) or count($summary) == 0) {
                 $personalDocument = $this->PersonalDocument->find('first', array('conditions' => array('user_id' => $this->Auth->user('id'), 'document_id' => $this->Document->id)));
 
                 //find out if user created summary before
@@ -314,7 +317,7 @@ class DocumentsController extends AppController {
      * Create initial ranking
      */
 
-    private function initial_ranking($generated_summary = array(), $ids) {
+    private function initial_ranking($generated_sum = array(), $ids) {
         foreach ($generated_sum as $sentence => $data) {
             //See if there is a difference between generated summary and personal summary
             if (in_array($data['Summary']['sentence_id'], $ids)) {

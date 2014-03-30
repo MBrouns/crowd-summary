@@ -69,6 +69,9 @@ $(document).ready(function() {
 		});
 		
 		$("#SummaryUserSentences").val(ids.toString());
+		if(ids.toString() == '') {
+			$("#SummaryUserSentences").val('None');
+		}
 		$("#SummaryUserNotes").val(JSON.stringify(notes));
 		$("#SummaryHtml").html("");
 
