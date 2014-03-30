@@ -50,9 +50,16 @@
 	margin: 0;
 }
 
-.glyphicon-remove {
+.note .glyphicon-remove {
 	position: absolute;
 	top: 10px;
+	right: 10px;
+	cursor: pointer;
+}
+
+.alert-flash .glyphicon-remove {
+	position: absolute;
+	top: 17px;
 	right: 10px;
 	cursor: pointer;
 }
@@ -78,4 +85,11 @@
 	color: white;
 	float: right;
 	padding: 15px 20px;
+}
+
+.alert-flash{
+	margin: 0;
+	position: absolute;
+	right: 0px;
+	padding-right: 56px;
 }

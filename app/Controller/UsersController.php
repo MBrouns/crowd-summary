@@ -17,10 +17,10 @@ class UsersController extends AppController {
     public function login() {
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
-                $this->Session->setFlash(__('Succesfully logged in'));
+                $this->Session->setFlash(__('Succesfully logged in'), 'flash_custom');
                 return $this->redirect($this->referer());
             }
-            $this->Session->setFlash(__('Invalid username or password, try again'));
+            $this->Session->setFlash(__('Invalid username or password, try again'), 'flash_custom');
         }
     }
 
@@ -48,12 +48,12 @@ class UsersController extends AppController {
         if ($this->request->is('post')) {
             $this->User->create();
             if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('The user has been saved'));
+                $this->Session->setFlash(__('The user has been saved'), 'flash_custom');
                 return $this->redirect(array('action' => 'index'));
             }
             $this->Session->setFlash(
                     __('The user could not be saved. Please, try again.')
-            );
+            , 'flash_custom');
         }
     }
 
@@ -69,7 +69,7 @@ class UsersController extends AppController {
             }
             $this->Session->setFlash(
                     __('The user could not be saved. Please, try again.')
-            );
+            , 'flash_custom');
         } else {
             $this->request->data = $this->User->read(null, $id);
             unset($this->request->data['User']['password']);
@@ -84,10 +84,10 @@ class UsersController extends AppController {
             throw new NotFoundException(__('Invalid user'));
         }
         if ($this->User->delete()) {
-            $this->Session->setFlash(__('User deleted'));
+            $this->Session->setFlash(__('User deleted'), 'flash_custom');
             return $this->redirect(array('action' => 'index'));
         }
-        $this->Session->setFlash(__('User was not deleted'));
+        $this->Session->setFlash(__('User was not deleted'), 'flash_custom');
         return $this->redirect(array('action' => 'index'));
     }
 

@@ -22,7 +22,7 @@ class DocumentsController extends AppController {
             ));
 
             if ($this->Document->save()) {
-                $this->Session->setFlash('Document was succesfully uploaded');
+                $this->Session->setFlash('Document was succesfully uploaded', 'flash_custom');
                 //connect user to document
                 $this->PersonalDocument->saveAssociated(array(
                     'User' => array('id' => $this->Auth->user('id')),
@@ -31,14 +31,14 @@ class DocumentsController extends AppController {
 
                 //create summary
                 if (!$this->create_summary_java($this->Document->id)) {
-                    $this->Session->setFlash(__('Automatic summarization failed.'));
+                    $this->Session->setFlash(__('Automatic summarization failed.'), 'flash_custom');
                 } else {
-                    $this->Session->setFlash(__('Succesfully created automatic summary'));
+                    $this->Session->setFlash(__('Succesfully created automatic summary'), 'flash_custom');
                 }
 
                 return $this->redirect(array('controller' => 'documents', 'action' => 'info', $this->Document->id));
             } else {
-                $this->Session->setFlash('Document could not be uploaded');
+                $this->Session->setFlash('Document could not be uploaded', 'flash_custom');
             }
         }
 
@@ -182,27 +182,27 @@ class DocumentsController extends AppController {
                 } else {
                     //update contributors
                     if (!$this->update_contributors($this->Document->id)) {
-                        $this->Session->setFlash(__('Contributors could not be updated'));
+                        $this->Session->setFlash(__('Contributors could not be updated'), 'flash_custom');
                     }
                     die();
                 }
 
                 //join user to document
                 if ($this->PersonalDocument->save(array('user_id' => $this->Auth->user('id'), 'document_id' => $this->Document->id))) {
-                    $this->Session->setFlash(__('Your personal summary has been saved'));
+                    $this->Session->setFlash(__('Your personal summary has been saved'), 'flash_custom');
 
                     //update ranking
                     if (!$this->update_ranking($ids, (isset($oldIds) ? $oldIds : null))) {
-                        $this->Session->setFlash(__('Ranking could not be updated'));
+                        $this->Session->setFlash(__('Ranking could not be updated'), 'flash_custom');
                     }
                 } else {
-                    $this->Session->setFlash(__('Personal document could not be saved'));
+                    $this->Session->setFlash(__('Personal document could not be saved'), 'flash_custom');
                 }
             } else {
-                $this->Session->setFlash(__('Summary could not be saved'));
+                $this->Session->setFlash(__('Summary could not be saved'), 'flash_custom');
             }
         } else {
-            $this->Session->setFlash(__('Old summary could not be deleted'));
+            $this->Session->setFlash(__('Old summary could not be deleted'), 'flash_custom');
         }
 
         return;
@@ -247,7 +247,7 @@ class DocumentsController extends AppController {
         $this->Note->deleteAll(array('Sentence.document_id' => $this->Document->id));
 
         if (!$this->Note->saveMany($toSave) and count($toSave) > 0) {
-            $this->Session->setFlash(__('Notes could not be saved'));
+            $this->Session->setFlash(__('Notes could not be saved'), 'flash_custom');
         }
 
         return true;
@@ -449,7 +449,7 @@ class DocumentsController extends AppController {
                 $this->Session->setFlash('Information was succesfully added');
                 return $this->redirect(array('controller' => 'documents', 'action' => 'index'));
             } else {
-                $this->Session->setFlash('Information could not be added');
+                $this->Session->setFlash('Information could not be added', 'flash_custom');
             }
         }
     }

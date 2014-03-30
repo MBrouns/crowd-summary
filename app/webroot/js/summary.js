@@ -139,7 +139,7 @@ $(document).ready(function() {
 	}
 	
 	// Remove note event
-	$(".glyphicon-remove").click(function() {
+	$(".note .glyphicon-remove").click(function() {
 		id = $(this).parent().attr("id").substring(4);
 		removeNote(id);
 		$(this).parent().remove();
