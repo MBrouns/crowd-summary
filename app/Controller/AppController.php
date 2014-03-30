@@ -46,7 +46,8 @@ class AppController extends Controller {
     public function beforeFilter() {
         $this->Auth->allow('display');//allow displaying pages for all users
         $user = $this->Auth->user('id');
-        //debug($user);
+        $username = $this->Auth->user('username');
         $this->set(compact('user'));
+        $this->set(compact('username'));
     }
 }

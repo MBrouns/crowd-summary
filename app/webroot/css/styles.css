@@ -3,6 +3,10 @@
 	margin: 30px auto;
 }
 
+.summary-container > h1 {
+	margin-left: 16px;
+}
+
 #summary {
 	width: 960px;
 	margin: 30px auto;
@@ -68,4 +72,10 @@
 
 #removeAll-highlights-button {
 	margin-right: 5px;
+}
+
+#welcomeUser {
+	color: white;
+	float: right;
+	padding: 15px 20px;
 }

@@ -16,8 +16,9 @@
                     if ($document['Document']['contributions'] > 0) {
                         echo ' and improved by ' . $document['Document']['contributions'] . ' users';
                     }
-                    if (!empty($personal_summary) && !empty($notes)) {
-                    	echo ". " . $this->Html->link('Open own version.', array('controller' => 'documents', 'action' => 'summary', $document['Document']['id'], 'personal'));
+                    echo '. ';
+                    if (!empty($personal_summary) or !empty($notes)) {
+                    	echo $this->Html->link('Open own version.', array('controller' => 'documents', 'action' => 'summary', $document['Document']['id'], 'personal'));
                     }
                 }
                 ?></p>
@@ -30,9 +31,9 @@
 
             </div>
         </div>
-
+        <h1><?php echo $document['Document']['title']; ?></h1>
         <div id="summary" rel="popover" data-container="#summary" data-trigger="manual" data-toggle="popover" data-placement="right" data-html="true" data-content="<textarea rows='4' cols='35'></textarea><div class='clear'></div><input class='btn btn-primary right' id='notes-save' type='button' value='Save' /><br/> " data-original-title="Insert your comment">
-        	<h1><?php echo $document['Document']['title']; ?></h1>
+        	
             <?php
             foreach ($document['Sentence'] as $sentence) {
                 echo "<span id='sentence" . $sentence['id'] . "'>" . $sentence['sentence'] . "</span><br/>";
