@@ -1,20 +1,19 @@
 notes = [];
-
+mode = "Highlight";
 
 $(document).ready(function() {
 
-	// Action Buttons
-	mode = "Highlight";
+	// Action Buttons: Highlight/Notes
 	$("#summary").css("cursor","text");
 	$("#mode button").click(function() {  
-    	$("#mode button").not(this).removeClass('active');
-    	$(this).toggleClass('active');
-    	mode = $(this).text();
-    	if (mode == "Highlight") {
-    		$("#summary").css("cursor","text");
-    	} else {
-    		$("#summary").css("cursor","crosshair")
-    	}
+		$("#mode button").not(this).removeClass('active');
+		$(this).toggleClass('active');
+		mode = $(this).text();
+		if (mode == "Highlight") {
+			$("#summary").css("cursor","text");
+		} else {
+			$("#summary").css("cursor","crosshair")
+		}
 	});
 
 	// Initialize highlights
@@ -45,28 +44,25 @@ $(document).ready(function() {
 		
 		for (var i = notes.length - 1; i >= 0; i--) {
 			o = notes[i];
-			id = o.sentence;
+			var id = o.sentence;
 			$("#note" + o.sentence).remove();
 			removeNote(id);
 			
 		};
-
 	});
 
 	// Initialize user highlighter
 	$('#summary').textHighlighter( {
 		onBeforeHighlight: function(range) {
-        	return true;
-        }
+			return true;
+		}
 	});
 
 	// Gather user input highlights	
-	$("#save-button").click( generate = function() {
+	$("#save-button").click( save = function() {
 
-		//flavour 1: just use html of the highlighted document: BOOK STYLE
-		ids = [];
+		var ids = [];
 
-		// flavour 2: only use the highlighted parts of the text
 		$.each($("#summary .highlighted"), function(i,val) {
 			id = $(val).attr("id");
 			if(id != undefined) {
@@ -89,13 +85,13 @@ $(document).ready(function() {
 
 	// Initialize notes
 	for (var i = notes.length - 1; i >= 0; i--) {
-		obj = notes[i];
-		offset = $("#sentence" + obj.sentence).offset().top;
+		var obj = notes[i];
+		var offset = $("#sentence" + obj.sentence).offset().top;
 		displayNote(notes[i], offset);
 	};
 
 
-
+	// Initialize bootstrap popover
 	$("#summary").popover({ container: '#summary' });
 	$("#summary span").click(function() {
 		if(mode == "Notes") {
@@ -118,13 +114,11 @@ $(document).ready(function() {
 
 				displayNote(obj, offset);
 				notes.push(obj);
-
-			});
-
-			
+			});	
 		}
 	});
 
+	// Make the note visible on the right side of the summary
 	function displayNote(obj,offset) {
 		if( $("#note" + obj.sentence).val() == undefined ) {
 			note = "<div class='alert alert-warning note' id='note"+ obj.sentence +"'>"+ obj.note.replace(/\n/g, "<br />") +"<span class='glyphicon glyphicon-remove'></span></div>";
@@ -133,8 +127,7 @@ $(document).ready(function() {
 			$("#note" + obj.sentence).css("top", offset-15);
 
 		} else {
-			$("#note" + obj.sentence).html(obj.note.replace(/\n/g, "<br />"));
-			
+			$("#note" + obj.sentence).html(obj.note.replace(/\n/g, "<br />"));			
 		}
 	}
 	
@@ -145,6 +138,7 @@ $(document).ready(function() {
 		$(this).parent().remove();
 	});
 
+	// Remove note function
 	function removeNote(id) {
 		for (var i = notes.length - 1; i >= 0; i--) {
 			o = notes[i];
@@ -154,24 +148,26 @@ $(document).ready(function() {
 		};
 	}
 
+	// Save value of the PDF Export options
 	$(".options button").click(function() {  
-    	$(this).parent().find("button").not(this).removeClass('active');
-    	$(this).toggleClass('active');
-    	type = $(this).parent().attr("id").substring(4);
-    	if (type == "pdf_type") {
-    		$("#SummaryPdfType").val($(this).index());
-    	} else {
-    		$("#SummaryPdfNotes").val($(this).index());
-    	}
-    	
+		$(this).parent().find("button").not(this).removeClass('active');
+		$(this).toggleClass('active');
+		type = $(this).parent().attr("id").substring(4);
+		if (type == "pdf_type") {
+			$("#SummaryPdfType").val($(this).index());
+		} else {
+			$("#SummaryPdfNotes").val($(this).index());
+		}
+		
 	});
 
+	// PDF Export button event
 	$("#export-button").click(function() {
-		generate();
+		save();
 		generatePdfHtml();
-		//return false;
 	});
 
+	// Generate PDF for 4 different cases in sent it to the server
 	function generatePdfHtml () {
 		var pdftype = parseInt($("#SummaryPdfType").val());
 		var pdfNotes = parseInt($("#SummaryPdfNotes").val());
@@ -186,7 +182,6 @@ $(document).ready(function() {
 		$("#pdf-summary span").removeClass("highlighted");
 		$("#pdf-summary span").css("background-color", "");
 		var html2 = $("#pdf-summary").html();
-
 
 		if (pdftype == 0 && pdfNotes == 1) {
 			$("#SummaryHtml").val(html1);
@@ -213,6 +208,5 @@ $(document).ready(function() {
 		$("#pdf-summary").html("");
 		
 	}
-
 
 });

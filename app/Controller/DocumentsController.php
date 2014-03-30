@@ -132,6 +132,8 @@ class DocumentsController extends AppController {
         //see if user has personal summary
         $user = $this->Auth->user();
         $summary = $this->Summary->find('all', array('conditions' => array('user_id' => $user['id'])));
+
+        
         if (!empty($summary)) {//user has summary
             $this->set('personal_summary', $summary);
             $mode = 'personal';
@@ -446,10 +448,10 @@ class DocumentsController extends AppController {
 
         if ($this->request->is('post') || $this->request->is('put')) {
             if ($this->Document->save($this->request->data['Info'])) {
-                $this->Session->setFlash('Information was succesfully added');
+                $this->Session->setFlash('Information was succesfully added', 'flash_custom');
                 return $this->redirect(array('controller' => 'documents', 'action' => 'index'));
             } else {
-                $this->Session->setFlash('Information could not be added', 'flash_custom');
+                $this->Session->setFlash('Information could not be added', 'flash_custom', 'flash_custom');
             }
         }
     }
