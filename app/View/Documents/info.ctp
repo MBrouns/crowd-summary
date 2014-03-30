@@ -4,7 +4,7 @@
     echo $this->Form->create('Info');
     echo $this->Form->input('title');
     echo $this->Form->input('author');
-    echo $this->Form->input('keywords');  
+    echo $this->Form->input('publication', array('label' => ' Year of publication'));
     echo $this->Form->submit('Submit');
     ?>
 </div>
