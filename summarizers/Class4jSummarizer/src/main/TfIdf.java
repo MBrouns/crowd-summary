@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+import org.tartarus.snowball.SnowballStemmer;
+
 public class TfIdf {
 
 	private List<TreeMap<String, Double>> termFrequencies;
@@ -14,9 +16,26 @@ public class TfIdf {
 	 * @param allterms
 	 *            - list of documents: documents represented as a String-array
 	 *            of their terms
+	 * @throws ClassNotFoundException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
-	public TfIdf(List<String[]> allTerms) {
-		allTermLists = allTerms;
+	@SuppressWarnings("rawtypes")
+	public TfIdf(List<String[]> allTerms) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+		Class stemClass = Class.forName("org.tartarus.snowball.ext.englishStemmer");
+        SnowballStemmer stemmer = (SnowballStemmer) stemClass.newInstance();
+		List<String[]> stemmedTerms = new ArrayList<String[]>();
+		for (String[] sArray : allTerms){
+			List<String> stemmedTermsPerDoc = new ArrayList<String>();
+			for (String s : sArray){
+				stemmer.setCurrent(s.toLowerCase());
+				stemmer.stem();       
+				stemmedTermsPerDoc.add(stemmer.getCurrent());
+			}
+			stemmedTerms.add(stemmedTermsPerDoc.toArray(new String[stemmedTermsPerDoc.size()]));
+		}
+		
+		allTermLists = stemmedTerms;
 		termFrequencies = new ArrayList<TreeMap<String, Double>>();
 		for(int i = 0; i < allTermLists.size(); i++){
 			termFrequencies.add(i, new TreeMap<String, Double>());

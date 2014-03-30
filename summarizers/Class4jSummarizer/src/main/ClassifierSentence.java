@@ -3,6 +3,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.tartarus.snowball.SnowballStemmer;
+
 public class ClassifierSentence {
 
 	private int sentenceID;
@@ -56,8 +58,17 @@ public class ClassifierSentence {
 						.prepareStatement("SELECT id, document_id, keyword FROM keywords WHERE document_id = ?");
 				sqlGetDocKeywords.setInt(1, rsGetSentence.getInt("document_id"));
 				ResultSet rsGetDocKeywords = sqlGetDocKeywords.executeQuery();
+				@SuppressWarnings("rawtypes")
+				Class stemClass = Class.forName("org.tartarus.snowball.ext.englishStemmer");
+		        SnowballStemmer stemmer = (SnowballStemmer) stemClass.newInstance();
+		        String stemmedSentenceContent = "";
+		        for(String word : sentenceContent.split("\\s+")){
+					stemmer.setCurrent(word.toLowerCase());
+					stemmer.stem();       
+					stemmedSentenceContent.concat(" " + stemmer.getCurrent());
+				}
 				while (rsGetDocKeywords.next()) {
-					if(sentenceContent.contains(rsGetDocKeywords.getString("keyword"))){
+					if(stemmedSentenceContent.contains(rsGetDocKeywords.getString("keyword"))){
 						this.keywordSimilarity++;
 					}
 				}
