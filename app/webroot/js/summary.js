@@ -52,12 +52,9 @@ $(document).ready(function() {
 
 		//flavour 1: just use html of the highlighted document: BOOK STYLE
 		ids = [];
-		html1 = $("#summary").html();
 
 		// flavour 2: only use the highlighted parts of the text
-		html2 = '';
 		$.each($("#summary .highlighted"), function(i,val) {
-			html2 += $(val).text() + "<br/>";
 			id = $(val).attr("id");
 			if(id != undefined) {
 				id = id.substr(8);
@@ -74,10 +71,6 @@ $(document).ready(function() {
 		}
 		$("#SummaryUserNotes").val(JSON.stringify(notes));
 		$("#SummaryHtml").html("");
-
-
-		
-
 
 	});
 
@@ -131,6 +124,13 @@ $(document).ready(function() {
 			
 		}
 	}
+	
+	// Remove note event
+	$(".glyphicon-remove").click(function() {
+		id = $(this).parent().attr("id").substring(4);
+		removeNote(id);
+		$(this).parent().remove();
+	});
 
 	function removeNote(id) {
 		for (var i = notes.length - 1; i >= 0; i--) {
@@ -154,20 +154,52 @@ $(document).ready(function() {
 	});
 
 	$("#export-button").click(function() {
-		pdftype = parseInt($("#SummaryPdfType").val());
 		generate();
-		if (pdftype == 0) {
+		generatePdfHtml();
+		//return false;
+	});
+
+	function generatePdfHtml () {
+		var pdftype = parseInt($("#SummaryPdfType").val());
+		var pdfNotes = parseInt($("#SummaryPdfNotes").val());
+
+		var html1 = $("#summary").html();
+
+		$("#pdf-summary").html(html1);
+		$("#pdf-summary span").not(".highlighted").each(function() {
+			$(this).next().remove();
+			$(this).remove();
+		});
+		$("#pdf-summary span").removeClass("highlighted");
+		$("#pdf-summary span").css("background-color", "");
+		var html2 = $("#pdf-summary").html();
+
+
+		if (pdftype == 0 && pdfNotes == 1) {
 			$("#SummaryHtml").val(html1);
-		} else {
+		} else if (pdftype == 1 && pdfNotes == 1) {
+			$("#pdf-summary").html(html1);
 			$("#SummaryHtml").val(html2);
+		} else if (pdftype == 0 && pdfNotes == 0) {
+			$("#pdf-summary").html(html1);
+			addPdfComments();
+		} else if (pdftype == 1 && pdfNotes == 0) {
+			$("#pdf-summary").html(html2);
+			addPdfComments();
 		}
 
-	});
+		function addPdfComments() {
+			for (var i = notes.length - 1; i >= 0; i--) {
+				var o = notes[i];
+				$("#pdf-summary #sentence" + o.sentence).next().remove();
+				$("#pdf-summary #sentence" + o.sentence).after("<p class='pdf-note'>"+ o.note +"</p>");				
+			};
+			$("#SummaryHtml").val($("#pdf-summary").html());			
+		}
 
-	$(".glyphicon-remove").click(function() {
-		id = $(this).parent().attr("id").substring(4);
-		removeNote(id);
-		$(this).parent().remove();
-	});
+		$("#pdf-summary").html("");
+		
+	}
+
 
 });

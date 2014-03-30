@@ -52,3 +52,16 @@
 	right: 10px;
 	cursor: pointer;
 }
+
+.pdf-note {
+     color: #616E14;
+     border: solid 1px #BFD62F;
+     background-color: #DAE691;
+     border-radius: 6px;
+     padding: 4px 20px;
+     margin:0;
+}
+
+#pdf-summary{
+	display: none;
+}

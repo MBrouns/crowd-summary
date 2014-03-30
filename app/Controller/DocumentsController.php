@@ -117,6 +117,7 @@ class DocumentsController extends AppController {
                     $html = '<html><body><style>'.
                     '.highlighted {background-color: rgb(255, 255, 123);}'.
                     'h1 {font-size: 36px; margin-top: 20px; margin-bottom: 10px; color: rgb(51, 51, 51); }'.
+                    '.pdf-note {color: #616E14; border: solid 1px #BFD62F; background-color: #DAE691; border-radius: 6px; padding: 4px 20px; margin:0}'.
                     '</style>'.
                     '<h1>'.$document['Document']['title'].'</h1>'.
                     $this->request->data['Summary']['html'] . '</body></html>';

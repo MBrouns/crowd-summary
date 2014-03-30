@@ -35,6 +35,7 @@
             }
             ?>	
         </div>
+        <div id="pdf-summary"></div>
 
 
         <?php
