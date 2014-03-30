@@ -145,17 +145,20 @@ public class Summarizer {
 				
 			}
 			int keywordIterator = 0;
+			ArrayList<String> stopWordList = StopWordProvider.newDefaultStopWordProvider();
 			for (Map.Entry<Double, String> entry : keywordList.entrySet()) {
-				if(keywordIterator > 5){
-					break;
+				if(entry.getValue().length() > 5 && !stopWordList.contains(entry.getValue())){
+					if(keywordIterator > 5){
+						break;
+					}
+					PreparedStatement sqlAddKeyword = c
+							.prepareStatement("INSERT INTO keywords (document_id, keyword) VALUES (?, ?)");
+					sqlAddKeyword.setInt(1, docID);
+					sqlAddKeyword.setString(2, entry.getValue());
+					sqlAddKeyword.execute();
+					keywordIterator++;
+					System.out.println(entry.getKey() + " => " + entry.getValue());
 				}
-				PreparedStatement sqlAddKeyword = c
-						.prepareStatement("INSERT INTO keywords (document_id, keyword) VALUES (?, ?)");
-				sqlAddKeyword.setInt(1, docID);
-				sqlAddKeyword.setString(2, entry.getValue());
-				sqlAddKeyword.execute();
-				keywordIterator++;
-				System.out.println(entry.getKey() + " => " + entry.getValue());
 			}
 			System.out.println("Keywords stored in database");
 			c.commit();
