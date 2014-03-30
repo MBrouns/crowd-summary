@@ -349,7 +349,7 @@ class DocumentsController extends AppController {
 
         $auto_sentences = $this->get_auto_summary($docId);
         if ($auto_sentences == false) {
-            return false;
+            return array();
         }
 
         //get all users with this docID
@@ -366,7 +366,6 @@ class DocumentsController extends AppController {
         }
 
         $sum_size = ceil($total_sentences / count($users));
-
         return array_slice($auto_sentences, 0, $sum_size);
     }
 
