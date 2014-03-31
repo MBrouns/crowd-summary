@@ -14,11 +14,14 @@ class UsersController extends AppController {
         $this->Auth->allow('add', 'logout');
     }
 
-    public function login() {
-        if ($this->request->is('post')) {
+    public function login() {        
+        if ($this->request->is('post')) {  
+            if(isset($this->request->data['User']['passwd'])){
+                $this->add($this->request->data);
+            }
             if ($this->Auth->login()) {
                 $this->Session->setFlash(__('Succesfully logged in'), 'flash_custom');
-                return $this->redirect($this->referer());
+                return $this->redirect(array('action' => 'index'));
             }
             $this->Session->setFlash(__('Invalid username or password, try again'), 'flash_custom');
         }
@@ -44,11 +47,15 @@ class UsersController extends AppController {
         $this->set('data', $data);
     }
 
-    public function add() {
-        if ($this->request->is('post')) {
+    public function add($request = null) {
+        if($request){
+            $this->request->data = $request;
+        }
+        if ($this->request->is('post') || $request != null) {
             $this->User->create();
             if ($this->User->save($this->request->data)) {
                 $this->Session->setFlash(__('The user has been saved'), 'flash_custom');
+                $this->Auth->login();
                 return $this->redirect(array('action' => 'index'));
             }
             $this->Session->setFlash(

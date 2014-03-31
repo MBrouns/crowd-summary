@@ -18,10 +18,10 @@
 			<?php if (!isset($user)) : ?>
 				<?php echo $this->Form->create(null, array('url' => array('controller' => 'users', 'action' => 'login'), 'class' => 'navbar-form navbar-right')); ?>
 				<div class="form-group">
-					<?php echo $this->Form->input('User.username', array('class' => 'form-control', 'type' => 'text', 'placeholder' => 'username', 'label' => '')); ?>
+					<?php echo $this->Form->input('User.username', array('class' => 'form-control', 'type' => 'text', 'placeholder' => 'username', 'label' => '', 'required' => false)); ?>
 				</div>
 				<div class="form-group"> 
-					<?php echo $this->Form->input('User.password', array('class' => 'form-control', 'placeholder' => 'password', 'label' => '')); ?>
+					<?php echo $this->Form->input('User.password', array('class' => 'form-control', 'placeholder' => 'password', 'label' => '', 'required' => false)); ?>
 				</div>
 				<div class="form-group">
 					<?php echo $this->form->submit('Sign in', array('class' => 'btn btn-success')); ?>
