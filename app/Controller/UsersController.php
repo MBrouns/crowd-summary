@@ -21,7 +21,7 @@ class UsersController extends AppController {
             }
             if ($this->Auth->login()) {
                 $this->Session->setFlash(__('Succesfully logged in'), 'flash_custom');
-                return $this->redirect(array('action' => 'index'));
+                return $this->redirect(array('controller' => 'documents', 'action' => 'index'));
             }
             $this->Session->setFlash(__('Invalid username or password, try again'), 'flash_custom');
         }
@@ -56,7 +56,7 @@ class UsersController extends AppController {
             if ($this->User->save($this->request->data)) {
                 $this->Session->setFlash(__('The user has been saved'), 'flash_custom');
                 $this->Auth->login();
-                return $this->redirect(array('action' => 'index'));
+                return $this->redirect(array('controller' => 'documents', 'action' => 'index'));
             }
             $this->Session->setFlash(
                     __('The user could not be saved. Please, try again.')

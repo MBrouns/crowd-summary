@@ -103,6 +103,9 @@ class DocumentsController extends AppController {
             $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' ' . APP . 'webroot\crowdsum 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems          
             $lastline = exec($cmd, $output, $returnVar);
             if ($lastline != 'Database connection closed') {//summarizer didn't output all 6 steps so sth is wrong
+                debug($lastline);
+                debug($output);
+                die();
                 return false;
             } else {
                 return true;
@@ -152,8 +155,7 @@ class DocumentsController extends AppController {
 
         //see if user has personal summary
         $user = $this->Auth->user();
-        $summary = $this->Summary->find('all', array('conditions' => array('user_id' => $user['id'])));
-
+        $summary = $this->Summary->find('all', array('conditions' => array('Summary.user_id' => $user['id'], 'Sentence.document_id' => $this->Document->id)));
         
         if (!empty($summary)) {//user has summary
             $this->set('personal_summary', $summary);
