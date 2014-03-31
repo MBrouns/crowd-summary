@@ -1,18 +1,8 @@
-Installeer WAMP
-
-Schakel mod-rewrite in
-
-cd .\app\Vendor\dompdf
-git fetch --recurse-submodules
-
-Installeer elasticsearch
-
 # Live Demo
 
-[We Summarize] (http://83.84.62.217/)
+[We Summarize: 83.84.62.217] (http://83.84.62.217/)
 
-Test User Credentials:
-
+**Test User Credentials:**  
 Username: karensg  
 Password: asdasd
 
@@ -22,3 +12,5 @@ Password: asdasd
 2. Enable mod-rewrite
 3. Clone the repository in your www folder with the following command:  
 `git clone --recursive https://github.com/yetti4/crowd-summary.git`
+4. Install ElasticSearch
+`How?`
