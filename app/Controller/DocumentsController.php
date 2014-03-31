@@ -12,7 +12,7 @@ class DocumentsController extends AppController {
      * Overview of all documents
      */
 
-    public function index() {
+    public function index() {        
         if (isset($this->request->data['Document']['file'])) {//file has been uploaded   
             
             if(!$this->validate_upload($this->request->data['Document']['file'])){

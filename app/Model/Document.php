@@ -47,5 +47,10 @@ class Document extends AppModel {
      * Define relations
      */
     public $hasMany = array('Sentence', 'Keyword', 'PersonalDocument');
+    
+    public function reIndex(){
+        $statusString = $this->reIndexAll();
+        Debugger::dump($statusString);
+    }
 
 }
