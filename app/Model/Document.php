@@ -5,7 +5,15 @@ App::uses('AppModel', 'Model');
 class Document extends AppModel {
         
     
-    public $validate = array(); //todo
+    public $validate = array(
+        'file' => array(
+            'rule' => array(
+                'extension',
+                array('txt')
+            ),
+            'message' => 'You can only upload txt files'
+        )
+    );
 
     /*
      * Define relations

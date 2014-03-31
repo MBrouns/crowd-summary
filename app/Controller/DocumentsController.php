@@ -13,8 +13,11 @@ class DocumentsController extends AppController {
      */
 
     public function index() {
-
-        if (isset($this->request->data['Document']['file'])) {//file has been uploaded                 
+        if (isset($this->request->data['Document']['file'])) {//file has been uploaded   
+            
+            if(!$this->validate_upload($this->request->data['Document']['file'])){
+               $this->redirect(array('controller' => 'documents', 'action' => 'index'));
+            }            
             //save document
             $this->Document->set(array(
                 'title' => $this->request->data['Document']['file']['name'],
@@ -62,6 +65,25 @@ class DocumentsController extends AppController {
         //get all documents
         $this->set('documents', $this->Document->find('all'));
     }
+    
+    /*
+     * Validate file upload
+     * 
+     * @param array file
+     */
+    public function validate_upload($file){
+        if($file['type'] != 'text/plain'){
+            $this->Session->setFlash(__('You can only upload plain text files'), 'flash_custom');
+            return false;
+        }
+        if(substr($file['name'], -4) != '.txt'){           
+            $this->Session->setFlash(__('You can only upload .txt files'), 'flash_custom');
+            return false;
+        }
+        
+        return true;
+        
+    }
 
     /*
      * create summary using Java library
@@ -75,13 +97,12 @@ class DocumentsController extends AppController {
         if (!$this->Document->exists()) {
             throw new NotFoundException(__('Invalid document id'));
         }
-
         $document = $this->Document->read(null, $this->Document->id);
         if (empty($document['Sentence'])) {//generate summary                    
             //call java summarizer
-            $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' ' . APP . 'webroot\crowdsum 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems
+            $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' ' . APP . 'webroot\crowdsum 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems          
             $lastline = exec($cmd, $output, $returnVar);
-            if (count($output) != 6) {//summarizer didn't output all 6 steps so sth is wrong
+            if ($lastline != 'Database connection closed') {//summarizer didn't output all 6 steps so sth is wrong
                 return false;
             } else {
                 return true;
