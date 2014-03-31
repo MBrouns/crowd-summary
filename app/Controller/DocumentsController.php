@@ -17,14 +17,13 @@ class DocumentsController extends AppController {
             
             if(!$this->validate_upload($this->request->data['Document']['file'])){
                $this->redirect(array('controller' => 'documents', 'action' => 'index'));
-            }            
+            }       
+            
             //save document
-            $this->Document->set(array(
-                'title' => $this->request->data['Document']['file']['name'],
-                'fulltext' => file_get_contents($this->request->data['Document']['file']['tmp_name'])
-            ));
-
-            if ($this->Document->save()) {
+            $this->request->data['Document']['title'] = $this->request->data['Document']['file']['name'];
+            $this->request->data['Document']['fulltext'] = file_get_contents($this->request->data['Document']['file']['tmp_name']);
+            unset($this->request->data['Document']['file']);
+            if ($this->Document->save($this->request->data)) {
                 $this->Session->setFlash('Document was succesfully uploaded', 'flash_custom');
                 //connect user to document
                 $this->PersonalDocument->saveAssociated(array(
@@ -103,9 +102,6 @@ class DocumentsController extends AppController {
             $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' ' . APP . 'webroot\crowdsum 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems          
             $lastline = exec($cmd, $output, $returnVar);
             if ($lastline != 'Database connection closed') {//summarizer didn't output all 6 steps so sth is wrong
-                debug($lastline);
-                debug($output);
-                die();
                 return false;
             } else {
                 return true;
