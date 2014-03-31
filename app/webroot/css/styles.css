@@ -93,3 +93,24 @@
 	right: 0px;
 	padding-right: 56px;
 }
+
+.users.inputs{
+    width: 250px;
+}
+
+.users.add{
+    width: 300px;
+}
+
+.users.form input{
+   float: right;
+}
+
+.input.password.required{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.users.form input[type="submit"]{
+    float: left;
+}

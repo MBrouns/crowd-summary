@@ -31,9 +31,9 @@ class UsersController extends AppController {
         return $this->redirect($this->Auth->logout());
     }
 
-    public function index() {
-        $this->User->recursive = 0;
-        $this->set('users', $this->paginate());
+    public function index() {        
+        $users = $this->User->find('all');
+        $this->set('users', $users);
     }
 
     public function view($id = null) {

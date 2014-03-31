@@ -186,7 +186,6 @@ class DocumentsController extends AppController {
                     if (!$this->update_contributors($this->Document->id)) {
                         $this->Session->setFlash(__('Contributors could not be updated'), 'flash_custom');
                     }
-                    die();
                 }
 
                 //join user to document
@@ -397,7 +396,7 @@ class DocumentsController extends AppController {
 
         $total_sentences = count($auto_sentences);
         foreach ($users as $user) {
-            $summaries[] = $this->Summary->find('all', array('conditions' => array('user_id' => $user['User']['id'])));
+            $summaries[] = $this->Summary->find('all', array('conditions' => array('Summary.user_id' => $user['User']['id'], 'Sentence.document_id' => $this->Document->id)));
             $total_sentences = $total_sentences + count(end($summaries));
         }
 
