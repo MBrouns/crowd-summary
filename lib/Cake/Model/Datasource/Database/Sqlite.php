@@ -191,8 +191,8 @@ class Sqlite extends DboSource {
 				}
 			}
 		}
-
-		$result->closeCursor();
+                            
+		$result->closeCursor();                
 		$this->_cacheDescription($table, $fields);
 		return $fields;
 	}

@@ -460,6 +460,7 @@ class DboSource extends DataSource {
 				$query->closeCursor();
 				return false;
 			}
+                        
 			if (!$query->columnCount()) {
 				$query->closeCursor();
 				if (!$query->rowCount()) {
