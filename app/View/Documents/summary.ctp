@@ -26,7 +26,7 @@
 					<button type="button" class="btn btn-default active" id="highlight-button">Highlight</button>
 					<button type="button" class="btn btn-default" id="notes-button">Notes</button>
 				</div>
-				<button type="button" class="btn btn-default right" id="removeAll-notes-button">Remove All Comments</button>
+				<button type="button" class="btn btn-default right" id="removeAll-notes-button">Remove All Notes</button>
 				<button type="button" class="btn btn-default right" id="removeAll-highlights-button">Remove All Highlights</button>
 			</div>
 		</div>

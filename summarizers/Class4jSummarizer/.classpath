@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/Classifier4J-0.6.jar"/>
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry kind="lib" path="lib/stanford-corenlp-3.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/org.tartarus.snowball.jar"/>
+	<classpathentry kind="lib" path="lib/Classifier4J-0.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
