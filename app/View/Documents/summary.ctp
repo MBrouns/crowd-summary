@@ -29,7 +29,8 @@
 		<div class="panel panel-primary">
 			<div class="panel-heading">Tools</div>
 			<div class="panel-body">
-				<p id="help-"></p>
+				<p>To highlight text, click on the sentence, or select the desired part of the text.</p>
+				<p>To make notes, click on the sentence and add note in the appeared pop-up.</p>
 				<div class="btn-group" id="mode">
 					<button type="button" class="btn btn-default active" id="highlight-button">Highlight</button>
 					<button type="button" class="btn btn-default" id="notes-button">Notes</button>

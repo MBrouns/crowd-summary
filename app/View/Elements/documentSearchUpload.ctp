@@ -26,7 +26,9 @@
             <?php echo $this->Form->file('Document.file'); ?>
             <p class="help-block">Choose an existing document on your hard disk.</p>
         </div>
-        <?php echo $this->Form->submit('Submit'); ?>
+        <div class="upload-button-div">
+            <?php echo $this->Form->submit('Submit', array('class' => 'btn btn-default right')); ?>
+        </div>
         <?php echo $this->Form->end();?>
 
     </div>

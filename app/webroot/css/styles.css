@@ -118,5 +118,11 @@
 .search-button-div {
 	position: absolute;
 	top: 63px;
-	left: -13px;
+	right: 13px;
+}
+
+.upload-button-div {
+	position: absolute;
+	top: 63px;
+	right: 53px;
 }

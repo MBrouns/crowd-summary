@@ -61,6 +61,7 @@ $(document).ready(function() {
 	// Gather user input highlights	
 	$("#save-button").click( save = function() {
 
+		$("#SummaryHtml").val('');
 		var ids = [];
 
 		$.each($("#summary .highlighted"), function(i,val) {
