@@ -15,15 +15,20 @@ public class ClassifierSentence {
 	private double keywordSimilarity;
 	private boolean hasAnaphora;
 	private boolean hasProperNouns;
+	private boolean hasNote = false;
 	
-	
+
+	public boolean isHasNote() {
+		return hasNote;
+	}
+
 
 	@Override
 	public String toString() {
 		return "ClassifierSentence [sentenceID=" + sentenceID + ", content="
 				+ content + ", length=" + length + ", posInDocument="
 				+ posInDocument + ", keywordSimilarity=" + keywordSimilarity
-				+ "]";
+				+ "hasNote=" + hasNote + "]";
 	}
 
 
@@ -43,6 +48,14 @@ public class ClassifierSentence {
 				this.length = sentenceContent.split("\\s+").length;
 				this.keywordSimilarity = 0;
 			
+				PreparedStatement sqlGetHasNote = c
+						.prepareStatement("SELECT id FROM notes WHERE sentence_id = ?");
+				sqlGetHasNote.setInt(1, rsGetSentence.getInt("document_id"));
+				ResultSet rsGetHasNote = sqlGetHasNote.executeQuery();
+				while (rsGetHasNote.next()) {
+					this.hasNote = true;
+				}
+				
 				PreparedStatement sqlGetDocStartEnd = c
 						.prepareStatement("SELECT MIN(id) AS begin, MAX(id) AS end, document_id FROM sentences WHERE document_id = ? GROUP BY document_id ");
 				sqlGetDocStartEnd.setInt(1, rsGetSentence.getInt("document_id"));
