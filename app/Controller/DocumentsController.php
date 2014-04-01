@@ -7,17 +7,18 @@
 class DocumentsController extends AppController {
 
     public $uses = array('PersonalDocument', 'Document', 'Summary', 'Sentence', 'Note');
-    
+
     /*
      * reIndex documents
      */
-    public function reIndex(){
+
+    public function reIndex() {
         $user = $this->Auth->user();
-        if($user['id'] == 3){
+        if ($user['id'] == 3) {
             $this->Document->reIndex();
         }
     }
-    
+
     /*
      * Overview of all documents
      */
@@ -34,17 +35,17 @@ class DocumentsController extends AppController {
             //Debugger::dump($doc);
             $doc2 = htmlentities($doc, ENT_IGNORE, "UTF-8");
             $doc3 = filter_var($doc2, FILTER_SANITIZE_STRING);
-           // if(var_dump($doc2) == var_dump($doc3)){
-           //     Debugger::dump('same');
-           // }
-            
+            // if(var_dump($doc2) == var_dump($doc3)){
+            //     Debugger::dump('same');
+            // }
+
             $this->request->data['Document']['fulltext'] = $doc3;
-          //  Debugger::dump($this->request->data['Document']['fulltext']);
-           // die();
+            //  Debugger::dump($this->request->data['Document']['fulltext']);
+            // die();
             unset($this->request->data['Document']['file']);
             if ($this->Document->save($this->request->data)) {
                 $this->Session->setFlash('Document was succesfully uploaded', 'flash_custom');
-                
+
                 //connect user to document
                 $this->PersonalDocument->saveAssociated(array(
                     'User' => array('id' => $this->Auth->user('id')),
@@ -73,21 +74,21 @@ class DocumentsController extends AppController {
 
         //Load arguments for document list filter
         /*
-        if (isset($_POST["inputTitle"])) {
-            $this->set('titleFilter', mysql_real_escape_string($_POST["inputTitle"]));
-        } else {
-            $this->set('titleFilter', '');
-        }
-        if (isset($_POST["inputAuthor"])) {
-            $this->set('authorFilter', mysql_real_escape_string($_POST["inputAuthor"]));
-        } else {
-            $this->set('authorFilter', '');
-        }
-        if (isset($_POST["inputContent"])) {
-            $this->set('contentFilter', mysql_real_escape_string($_POST["inputContent"]));
-        } else {
-            $this->set('contentFilter', '');
-        }*/
+          if (isset($_POST["inputTitle"])) {
+          $this->set('titleFilter', mysql_real_escape_string($_POST["inputTitle"]));
+          } else {
+          $this->set('titleFilter', '');
+          }
+          if (isset($_POST["inputAuthor"])) {
+          $this->set('authorFilter', mysql_real_escape_string($_POST["inputAuthor"]));
+          } else {
+          $this->set('authorFilter', '');
+          }
+          if (isset($_POST["inputContent"])) {
+          $this->set('contentFilter', mysql_real_escape_string($_POST["inputContent"]));
+          } else {
+          $this->set('contentFilter', '');
+          } */
 
         //get all documents
         if (!isset($documents)) {
@@ -127,9 +128,15 @@ class DocumentsController extends AppController {
             throw new NotFoundException(__('Invalid document id'));
         }
         $document = $this->Document->read(null, $this->Document->id);
-        if (empty($document['Sentence'])) {//generate summary                    
+        if (empty($document['Sentence'])) {//generate summary        
+            
+            App::import('Core', 'ConnectionManager');
+            $dataSource = ConnectionManager::getDataSource('default');
+            $username = $dataSource->config['login'];
+            $password = $dataSource->config['password'];
+
             //call java summarizer
-            $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' "jdbc:mysql://localhost/crowdsum?user=root&password=root" mysql 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems          
+            $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' "jdbc:mysql://localhost/crowdsum?user='.$username.'&password='.$password.'" mysql 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems          
             $lastline = exec($cmd, $output, $returnVar);
             if ($lastline != 'Database connection closed') {//summarizer didn't output all 6 steps so sth is wrong
                 Debugger::log($cmd);
