@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="lib/stanford-corenlp-3.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/org.tartarus.snowball.jar"/>
 	<classpathentry kind="lib" path="lib/Classifier4J-0.6.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.0.8-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
