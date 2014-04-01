@@ -111,8 +111,30 @@
     margin-bottom: 10px;
 }
 
-.users.form input[type="submit"]{
+.info.form input[type="submit"]{
     float: left;
+}
+
+.info.inputs{
+    width: 250px;
+}
+
+.info-fields{
+    width: 300px;
+}
+
+.info-fields label{
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+
+.info.form input{
+   float: right;
+}
+
+.info.form input[type="submit"]{
+    float: left;
+    margin-top: 10px;
 }
 
 .search-button-div {

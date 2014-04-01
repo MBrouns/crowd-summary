@@ -1,18 +1,22 @@
-<div class="container">
-    <h2><?php echo __('Add document information'); ?></h2>
-    <div class="users form">
+<div class="container">    
+    <div class="info form">
+        <div class="well">
+            <h1 id="welcome">Information</h1>
+            Please provide some information about the document you just uploaded.
+        </div>
         <?php
         echo $this->Form->create('Info');
         ?>
-        <div class="users add">
+        <div class="info-fields">
             <?php
-            echo $this->Form->input('title');
-            echo $this->Form->input('author');
-            echo $this->Form->input('publication', array('label' => ' Year of publication'));
+            echo $this->Form->input('title', array('class' => 'form-control'));
+            echo $this->Form->input('author', array('class' => 'form-control'));
+            echo $this->Form->input('publication', array('label' => ' Year of publication', 'class' => 'form-control'));
+            ?>
+
+            <?php
+            echo $this->Form->submit('Submit', array('class' => 'btn btn-default'));
             ?>
         </div>
-        <?php
-        echo $this->Form->submit('Submit');
-        ?>
     </div>
 </div>
