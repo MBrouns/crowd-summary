@@ -3,5 +3,5 @@
  * Notes model
  */
 class Note extends AppModel{
-    public $belongsTo = 'Sentence';
+    public $belongsTo = array('Sentence', 'User');
 }

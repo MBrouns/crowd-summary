@@ -23,3 +23,5 @@ ehthumbs.db
 Thumbs.db
 /nbproject/private/
 /nbproject
+app/Config/database.php
+app/webroot/crowdsum

@@ -3,32 +3,6 @@
 App::uses('AppModel', 'Model');
 
 class Document extends AppModel {
-    /*
-      public $useDBConfig = 'index';
-
-      public $actsAs = array('Elastic.Indexable');
-
-      public $_mapping = array(
-      'id' => array('type' => 'string'),
-      'author' => array('type' => 'string'),
-      'title' => array('type' => 'string'),
-      'keywords' => array('type' => 'string'),
-      'contributions' => array('type' => 'string'),
-      'fulltext' => array('type' => 'string'),
-      'publication' => array('type' => 'integer'),
-      'created' => array('type' => 'datetime'),
-      'modified' => array('type' => 'datetime')
-      );
-
-      public function elasticMapping() {
-      return $this->_mapping;
-      }
-
-      public $actAs = array('Elasticsearch.Searchable' => array(
-
-      ));
-
-      public $useTable = 'documents'; */
 
     public $validate = array(
         'file' => array(
@@ -40,7 +14,9 @@ class Document extends AppModel {
         )
     );
     public $actsAs = array(
-        'ElasticSearchIndex.ElasticSearchIndexable' => array(),
+        'ElasticSearchIndex.ElasticSearchIndexable' => array(
+            'fields' => array('author', 'title', 'full_text', 'publication')
+        ),
     );
 
     /*
@@ -70,8 +46,23 @@ class Document extends AppModel {
                 "{$this->alias}.{$this->primaryKey}" => $sortedIds
             )
         ));
-        
+
         return $this->searchResultsResort($results, $sortedIds);
     }
+
+    /*
+     * Index data to elasticsearch
+     */
+/*
+    public function afterSave($created, $options = array()) {
+        //parent::afterSave($created, $options);
+
+        $data = $this->read();
+        //Debugger::log($data);
+        
+        $id = $data[$this->alias][$this->primaryKey];
+        $success = $this->saveToIndex($id, $data);
+        
+    }*/
 
 }

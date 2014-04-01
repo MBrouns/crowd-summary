@@ -11,7 +11,7 @@ class User extends AppModel {
     /*
      * Define relations
      */
-    public $hasMany = array('PersonalDocument');
+    public $hasMany = array('PersonalDocument', 'Note');
     
     /*
      * Validate fields before updating databse

@@ -7,7 +7,17 @@
 class DocumentsController extends AppController {
 
     public $uses = array('PersonalDocument', 'Document', 'Summary', 'Sentence', 'Note');
-
+    
+    /*
+     * reIndex documents
+     */
+    public function reIndex(){
+        $user = $this->Auth->user();
+        if($user['id'] == 3){
+            $this->Document->reIndex();
+        }
+    }
+    
     /*
      * Overview of all documents
      */
@@ -20,10 +30,11 @@ class DocumentsController extends AppController {
 
             //save document
             $this->request->data['Document']['title'] = $this->request->data['Document']['file']['name'];
-            $this->request->data['Document']['fulltext'] = file_get_contents($this->request->data['Document']['file']['tmp_name']);
+            $this->request->data['Document']['full_text'] = file_get_contents($this->request->data['Document']['file']['tmp_name']);
             unset($this->request->data['Document']['file']);
             if ($this->Document->save($this->request->data)) {
                 $this->Session->setFlash('Document was succesfully uploaded', 'flash_custom');
+                
                 //connect user to document
                 $this->PersonalDocument->saveAssociated(array(
                     'User' => array('id' => $this->Auth->user('id')),
@@ -110,6 +121,7 @@ class DocumentsController extends AppController {
             $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' ' . APP . 'webroot\crowdsum 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems          
             $lastline = exec($cmd, $output, $returnVar);
             if ($lastline != 'Database connection closed') {//summarizer didn't output all 6 steps so sth is wrong
+                Debugger::log($output);
                 return false;
             } else {
                 return true;
@@ -179,6 +191,7 @@ class DocumentsController extends AppController {
         $this->set('document', $this->Document->read(null, $this->Document->id));
         $this->set('generated_summary', $this->generate_summary($this->Document->id));
         $this->set('notes', $this->Note->find('all', array('conditions' => array('Sentence.document_id' => $this->Document->id))));
+        $this->set('personal_notes', $this->Note->find('all', array('conditions' => array('Sentence.document_id' => $this->Document->id, 'User.id' => $this->Auth->user('id')))));
     }
 
     /*
@@ -269,6 +282,7 @@ class DocumentsController extends AppController {
             end($toSave);
             $key = key($toSave);
             $toSave[$key]['Note']['note'] = $note->note;
+            $toSave[$key]['Note']['user_id'] = $this->Auth->user('id');
         }
 
         //delete old notes to prevent doubles and obsolete notes

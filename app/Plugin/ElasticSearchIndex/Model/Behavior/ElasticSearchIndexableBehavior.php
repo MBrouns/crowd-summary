@@ -227,7 +227,9 @@ class ElasticSearchIndexableBehavior extends ModelBehavior {
 		if (method_exists($Model, 'getDataForIndex')) {
 			return $Model->getDataForIndex($association_key);
 		}
-		return $Model->read(null, $association_key);
+                
+		$data =  $Model->read(null, $association_key);
+                return $data;
 	}
 
 	/**
