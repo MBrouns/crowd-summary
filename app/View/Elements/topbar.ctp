@@ -13,7 +13,7 @@
 			<ul class="nav navbar-nav">
 				<li id="menu-documents"><?php echo $this->Html->link('All Documents', array('controller' => 'documents', 'action' => 'index')); ?></li>
 				<li ><?php echo (isset($user) ? $this->Html->link('My Summaries', array('controller' => 'users', 'action' => 'view', $user)) : ''); ?></li>
-				<li id="menu-info"><?php echo $this->Html->link('Help', array('controller' => 'info', 'action' => 'index')); ?></li>				
+				<li id="menu-info"><?php echo $this->Html->link('About', array('controller' => 'info', 'action' => 'index')); ?></li>				
 			</ul>
 			<?php if (!isset($user)) : ?>
 				<?php echo $this->Form->create(null, array('url' => array('controller' => 'users', 'action' => 'login'), 'class' => 'navbar-form navbar-right')); ?>
@@ -31,8 +31,8 @@
 			<?php else : ?>
 				<?php 
 
-				echo $this->Html->link('Sign out', array('controller' => 'users', 'action' => 'logout'), array('class' => 'btn btn-primary navbar-btn', 'id' => 'logout')); ?>
-				<div id="welcomeUser">Welcome <?php echo $username ?></div>
+				echo $this->Html->link('Sign out', array('controller' => 'users', 'action' => 'logout'), array('class' => 'btn btn-primary navbar-btn', 'id' => 'logout'));
+				echo $this->Html->link('<div id="welcomeUser">Logged in as '.$username.'</div>', array('controller' => 'users', 'action' => 'view', $user), array('escape' => false)); ?>
 			<?php endif; ?>
 		</div>
 	</div>

@@ -4,10 +4,12 @@
 
 <div class="container">
 	<div class="summary-container">
-		<div class="panel panel-primary">
-			<div class="panel-heading">Tools</div>
-			<div class="panel-body">
-				<p><?php
+
+		
+		<br/>  
+    <div class="well">
+        <h1><?php echo $document['Document']['title']; ?></h1>
+        <p><?php
 				if($mode == 'personal') {
 					echo "This is your saved version of the summary. " . $this->Html->link('Open generated version.', array('controller' => 'documents', 'action' => 'summary', $document['Document']['id'] , 'automatic'));
 
@@ -22,6 +24,12 @@
 					}
 				}
 				?></p>
+    </div>
+
+		<div class="panel panel-primary">
+			<div class="panel-heading">Tools</div>
+			<div class="panel-body">
+				<p id="help-"></p>
 				<div class="btn-group" id="mode">
 					<button type="button" class="btn btn-default active" id="highlight-button">Highlight</button>
 					<button type="button" class="btn btn-default" id="notes-button">Notes</button>
@@ -30,7 +38,7 @@
 				<button type="button" class="btn btn-default right" id="removeAll-highlights-button">Remove All Highlights</button>
 			</div>
 		</div>
-		<h1><?php echo $document['Document']['title']; ?></h1>
+		
 		<div id="summary" rel="popover" data-container="#summary" data-trigger="manual" data-toggle="popover" data-placement="right" data-html="true" data-content="<textarea rows='4' cols='35'></textarea><div class='clear'></div><input class='btn btn-primary right' id='notes-save' type='button' value='Save' /><br/> " data-original-title="Insert your comment">
 
 			<?php
@@ -92,8 +100,10 @@ var notes = []
 // Add highlights to Javascript
 if ($mode == 'personal') {
 	$highlightsJS = $personal_summary;
+	$notesJS = $personal_notes;
 } else {
 	$highlightsJS = $generated_summary;
+	$notesJS = $notes;
 }
 foreach ($highlightsJS as $sentence) {
 	echo "highlights.push('" . addslashes($sentence['Summary']['sentence_id']) . "');\n";
@@ -101,7 +111,7 @@ foreach ($highlightsJS as $sentence) {
 
 
 // Add notes to javascript
-foreach ($notes as $note) {
+foreach ($notesJS as $note) {
 ?>
 obj = new Object();
 obj.sentence = <?php echo $note["Note"]["sentence_id"] ?>;
