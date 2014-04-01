@@ -80,7 +80,7 @@ public class Summarizer {
 			
 			//Check if a summary already exists for the given document ID.
 			PreparedStatement sqlCheckDocumentSummarized = c
-					.prepareStatement("Select [document_id] FROM sentences WHERE document_id = ?;");
+					.prepareStatement("Select document_id FROM sentences WHERE document_id = ?;");
 			sqlCheckDocumentSummarized.setInt(1, docID);
 
 			ResultSet rsDocumentSummarized = sqlCheckDocumentSummarized
@@ -92,7 +92,7 @@ public class Summarizer {
 
 			//Get fulltext as input for summarizer
 			PreparedStatement sqlSelectDocumentText = c
-					.prepareStatement("Select [fulltext] FROM documents WHERE id = ?;");
+					.prepareStatement("Select fulltext FROM documents WHERE id = ?;");
 			sqlSelectDocumentText.setInt(1, docID);
 
 			ResultSet rs = sqlSelectDocumentText.executeQuery();
