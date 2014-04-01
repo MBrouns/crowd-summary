@@ -129,14 +129,11 @@ class DocumentsController extends AppController {
         }
         $document = $this->Document->read(null, $this->Document->id);
         if (empty($document['Sentence'])) {//generate summary        
-            
             App::import('Core', 'ConnectionManager');
             $dataSource = ConnectionManager::getDataSource('default');
-            $username = $dataSource->config['login'];
-            $password = $dataSource->config['password'];
 
             //call java summarizer
-            $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' "jdbc:mysql://localhost/crowdsum?user='.$username.'&password='.$password.'" mysql 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems          
+            $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' "jdbc:mysql://localhost/crowdsum?user=' . $dataSource->config['login'] . '&password=' . $dataSource->config['password'] . (isset($dataSource->config['port']) ? '&port=' . $dataSource->config['port'] : '').'" mysql 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems          
             $lastline = exec($cmd, $output, $returnVar);
             if ($lastline != 'Database connection closed') {//summarizer didn't output all 6 steps so sth is wrong
                 Debugger::log($cmd);
