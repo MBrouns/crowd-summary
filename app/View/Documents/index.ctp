@@ -24,7 +24,7 @@
 				<tr>
 					<td><?php echo $this->Html->link($document['Document']['title'], array('controller' => 'documents', 'action' => 'summary', $document['Document']['id'])); ?></td>
 					<td><?php echo $document['Document']['author']; ?></td>
-					<td><?php echo (isset($document['Document']['contributions']) ? $document['Document']['contributions'] : ''); ?></td>
+					<td><?php echo (isset($document['Document']['contributions']) ? $document['Document']['contributions'] : '0'); ?></td>
 				<!--	<td>
 						<?php /*
 						$keywords = '';

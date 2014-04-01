@@ -133,7 +133,7 @@ $(document).ready(function() {
 	}
 	
 	// Remove note event
-	$(".note .glyphicon-remove").click(function() {
+	$( document ).on( "click", ".note .glyphicon-remove", function() {
 		id = $(this).parent().attr("id").substring(4);
 		removeNote(id);
 		$(this).parent().remove();
@@ -150,7 +150,7 @@ $(document).ready(function() {
 	}
 
 	// Save value of the PDF Export options
-	$(".options button").click(function() {  
+	$(".options button").click(function() {
 		$(this).parent().find("button").not(this).removeClass('active');
 		$(this).toggleClass('active');
 		type = $(this).parent().attr("id").substring(4);
