@@ -69,8 +69,7 @@ public class Summarizer {
 				Class.forName("com.mysql.jdbc.Driver");
 			      // setup the connection with the DB.
 			      c = DriverManager
-			          .getConnection("jdbc:mysql://localhost/database?"
-			              + "user=sqluser&password=sqluserpw");
+			          .getConnection(dbPath);
 			}else{		      
 				Class.forName("org.sqlite.JDBC");
 				c = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
