@@ -224,7 +224,7 @@ class DocumentsController extends AppController {
         $oldIds = $this->get_old_ids($this->Document->id);
 
         //delete old personal summary
-        if ($this->Summary->deleteAll(array('user_id' => $this->Auth->user('id')))) {
+        if ($this->Summary->deleteAll(array('Summary.user_id' => $this->Auth->user('id'), 'Sentence.document_id' => $this->Document->id))) {
 
             //save new personal summary
             if ($this->Summary->saveMany($summary) or count($summary) == 0) {
