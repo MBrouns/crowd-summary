@@ -11,9 +11,9 @@
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<li id="menu-documents"><?php echo $this->Html->link('Documents', array('controller' => 'documents', 'action' => 'index')); ?></li>
-				<li id="menu-info"><?php echo $this->Html->link('Info', array('controller' => 'info', 'action' => 'index')); ?></li>
-				<li ><?php echo (isset($user) ? $this->Html->link('Personal', array('controller' => 'users', 'action' => 'view', $user)) : ''); ?></li>
+				<li id="menu-documents"><?php echo $this->Html->link('All Documents', array('controller' => 'documents', 'action' => 'index')); ?></li>
+				<li ><?php echo (isset($user) ? $this->Html->link('My Summaries', array('controller' => 'users', 'action' => 'view', $user)) : ''); ?></li>
+				<li id="menu-info"><?php echo $this->Html->link('Help', array('controller' => 'info', 'action' => 'index')); ?></li>				
 			</ul>
 			<?php if (!isset($user)) : ?>
 				<?php echo $this->Form->create(null, array('url' => array('controller' => 'users', 'action' => 'login'), 'class' => 'navbar-form navbar-right')); ?>
