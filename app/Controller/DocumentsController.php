@@ -30,7 +30,11 @@ class DocumentsController extends AppController {
 
             //save document
             $this->request->data['Document']['title'] = $this->request->data['Document']['file']['name'];
-            $this->request->data['Document']['full_text'] = file_get_contents($this->request->data['Document']['file']['tmp_name']);
+            $doc = file_get_contents($this->request->data['Document']['file']['tmp_name']);
+            //Debugger::dump($doc);
+            $this->request->data['Document']['fulltext'] = htmlentities($doc, ENT_IGNORE, "UTF-8");
+            //Debugger::dump($this->request->data['Document']['fulltext']);
+            //die();
             unset($this->request->data['Document']['file']);
             if ($this->Document->save($this->request->data)) {
                 $this->Session->setFlash('Document was succesfully uploaded', 'flash_custom');
@@ -118,9 +122,10 @@ class DocumentsController extends AppController {
         $document = $this->Document->read(null, $this->Document->id);
         if (empty($document['Sentence'])) {//generate summary                    
             //call java summarizer
-            $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' ' . APP . 'webroot\crowdsum 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems          
+            $cmd = 'java -jar ' . APP . '../summarizers/Summarizer.jar ' . $this->Document->id . ' "jdbc:mysql://localhost/crowdsum?user=root&password=root" mysql 2>&1'; //some problems with exec in php 5.2.2+ on windows https://bugs.php.net/bug.php?id=41874 check this works on other systems          
             $lastline = exec($cmd, $output, $returnVar);
             if ($lastline != 'Database connection closed') {//summarizer didn't output all 6 steps so sth is wrong
+                Debugger::log($cmd);
                 Debugger::log($output);
                 return false;
             } else {
@@ -286,7 +291,7 @@ class DocumentsController extends AppController {
         }
 
         //delete old notes to prevent doubles and obsolete notes
-        $this->Note->deleteAll(array('Sentence.document_id' => $this->Document->id));
+        $this->Note->deleteAll(array('Sentence.document_id' => $this->Document->id, 'User.id' => $this->Auth->user('id')));
 
         if (!$this->Note->saveMany($toSave) and count($toSave) > 0) {
             $this->Session->setFlash(__('Notes could not be saved'), 'flash_custom');

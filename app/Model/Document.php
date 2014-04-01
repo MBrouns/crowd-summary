@@ -15,7 +15,7 @@ class Document extends AppModel {
     );
     public $actsAs = array(
         'ElasticSearchIndex.ElasticSearchIndexable' => array(
-            'fields' => array('author', 'title', 'full_text', 'publication')
+            'fields' => array('author', 'title', 'fulltext', 'publication')
         ),
     );
 
