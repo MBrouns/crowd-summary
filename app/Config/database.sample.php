@@ -78,14 +78,14 @@ class DATABASE_CONFIG {
 	/* Edit the mysql info above */
 	
 	
-    
+   /* 
     public $sqlite = array(
         'datasource' => 'Database/Sqlite',
         'persistent' => false,
         'database' => 'crowdsum',
         'prefix' => '',
         'encoding' => 'utf8'
-    );
+    );*/
     
     public $test = array(
         'datasource' => 'Database/Mysql',
