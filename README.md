@@ -14,3 +14,8 @@ Password: asdasd
 `git clone https://github.com/yetti4/crowd-summary.git`
 4. Install ElasticSearch  
 `http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-service-win.html`
+5. Rename database.sample.php in /app/Config/ to database.php and provide the right mySQL credentials
+6. Import crowdsum.sql into mySQL database 'crowdsum'
+7. Visit the website on your server and login as user 'bouke' with password 'bouke' 
+8. Go to yourwebsite/documents/reIndex to index test data in elastic search
+9. Enjoy using the crowdsummary website
