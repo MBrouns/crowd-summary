@@ -13,4 +13,4 @@ Password: asdasd
 3. Clone the repository in your www folder with the following command:  
 `git clone https://github.com/yetti4/crowd-summary.git`
 4. Install ElasticSearch  
-`How?`
+`http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-service-win.html`
