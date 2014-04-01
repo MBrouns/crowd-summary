@@ -43,7 +43,7 @@ class UsersController extends AppController {
         }
 
         //get all documents from user
-        $data = $this->PersonalDocument->find('all', array('conditions' => array('PersonalDocument.user_id' => $this->User->id)));
+        $data = $this->PersonalDocument->find('all', array('conditions' => array('PersonalDocument.user_id' => $this->User->id, 'PersonalDocument.uploaded' => 0)));
         $this->set('data', $data);
     }
 

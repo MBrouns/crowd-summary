@@ -32,9 +32,15 @@ class DocumentsController extends AppController {
             $this->request->data['Document']['title'] = $this->request->data['Document']['file']['name'];
             $doc = file_get_contents($this->request->data['Document']['file']['tmp_name']);
             //Debugger::dump($doc);
-            $this->request->data['Document']['fulltext'] = htmlentities($doc, ENT_IGNORE, "UTF-8");
-            //Debugger::dump($this->request->data['Document']['fulltext']);
-            //die();
+            $doc2 = htmlentities($doc, ENT_IGNORE, "UTF-8");
+            $doc3 = filter_var($doc2, FILTER_SANITIZE_STRING);
+           // if(var_dump($doc2) == var_dump($doc3)){
+           //     Debugger::dump('same');
+           // }
+            
+            $this->request->data['Document']['fulltext'] = $doc3;
+          //  Debugger::dump($this->request->data['Document']['fulltext']);
+           // die();
             unset($this->request->data['Document']['file']);
             if ($this->Document->save($this->request->data)) {
                 $this->Session->setFlash('Document was succesfully uploaded', 'flash_custom');
@@ -43,6 +49,7 @@ class DocumentsController extends AppController {
                 $this->PersonalDocument->saveAssociated(array(
                     'User' => array('id' => $this->Auth->user('id')),
                     'Document' => array('id' => $this->Document->id),
+                    'uploaded' => 1
                 ));
 
                 //create summary
@@ -221,7 +228,7 @@ class DocumentsController extends AppController {
 
             //save new personal summary
             if ($this->Summary->saveMany($summary) or count($summary) == 0) {
-                $personalDocument = $this->PersonalDocument->find('first', array('conditions' => array('user_id' => $this->Auth->user('id'), 'document_id' => $this->Document->id)));
+                $personalDocument = $this->PersonalDocument->find('first', array('conditions' => array('user_id' => $this->Auth->user('id'), 'document_id' => $this->Document->id, 'uploaded !=' => 1)));
 
                 //find out if user created summary before
                 if (!empty($personalDocument)) {
@@ -234,7 +241,7 @@ class DocumentsController extends AppController {
                 }
 
                 //join user to document
-                if ($this->PersonalDocument->save(array('user_id' => $this->Auth->user('id'), 'document_id' => $this->Document->id))) {
+                if ($this->PersonalDocument->save(array('user_id' => $this->Auth->user('id'), 'document_id' => $this->Document->id, 'uploaded' => 0))) {
                     $this->Session->setFlash(__('Your personal summary has been saved'), 'flash_custom');
 
                     //update ranking
