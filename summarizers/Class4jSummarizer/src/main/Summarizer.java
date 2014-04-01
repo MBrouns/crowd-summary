@@ -35,6 +35,7 @@ public class Summarizer {
 		String input = null;
 		int docID = 0;
 		String dbPath = null;
+		String connectionType = "sqlite";
 		if (args.length > 1) {
 			try {
 				docID = Integer.parseInt(args[0]);
@@ -48,6 +49,14 @@ public class Summarizer {
 				System.err.println("dbPath must be a string");
 				System.exit(1);
 			}
+			try {
+				if(args.length > 2){
+					connectionType = args[2];
+				}
+			} catch (Exception e) {
+				System.err.println("connectionType must be a string");
+				System.exit(1);
+			}
 		} else {
 			System.err
 					.println("No DocID or dbPath specified. Please provide it through a command line argument");
@@ -56,8 +65,16 @@ public class Summarizer {
 
 		Connection c = null;
 		try {
-			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+			if(connectionType.toLowerCase().equals("mysql")){
+				Class.forName("com.mysql.jdbc.Driver");
+			      // setup the connection with the DB.
+			      c = DriverManager
+			          .getConnection("jdbc:mysql://localhost/database?"
+			              + "user=sqluser&password=sqluserpw");
+			}else{		      
+				Class.forName("org.sqlite.JDBC");
+				c = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+			}
 			c.setAutoCommit(false);
 			System.out.println("Database connection established");
 
