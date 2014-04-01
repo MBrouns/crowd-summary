@@ -7,11 +7,12 @@
             <div class="col-sm-10">
                 <?php echo $this->Form->input('Elastic.query', array('label' => '', 'class' => 'form-control search')); ?>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
+      
+            <div class="col-sm-offset-2 col-sm-10 search-button-div">
                 <!-- <button type="submit" class="btn btn-default">Search</button> -->
-                <?php echo $this->Form->submit('Search', array('class' => 'btn btn-default')); ?>
+                <?php echo $this->Form->submit('Search', array('class' => 'btn btn-default right')); ?>
+                <?php echo $this->Form->end();?>
+
             </div>
         </div>
         </form>
@@ -26,6 +27,7 @@
             <p class="help-block">Choose an existing document on your hard disk.</p>
         </div>
         <?php echo $this->Form->submit('Submit'); ?>
+        <?php echo $this->Form->end();?>
 
     </div>
 </div>

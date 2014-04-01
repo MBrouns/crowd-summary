@@ -114,3 +114,9 @@
 .users.form input[type="submit"]{
     float: left;
 }
+
+.search-button-div {
+	position: absolute;
+	top: 63px;
+	left: -13px;
+}
