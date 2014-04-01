@@ -47,10 +47,31 @@ class Document extends AppModel {
      * Define relations
      */
     public $hasMany = array('Sentence', 'Keyword', 'PersonalDocument');
-    
-    public function reIndex(){
+
+    /*
+     * Index documents to elasticSearch
+     */
+
+    public function reIndex() {
         $statusString = $this->reIndexAll();
         Debugger::dump($statusString);
+    }
+
+    /*
+     * search documents
+     * 
+     * @param string term
+     */
+
+    public function search($term) {
+        $sortedIds = $this->searchAndReturnAssociationKeys($term);
+        $results = $this->find('all', array(
+            'conditions' => array(
+                "{$this->alias}.{$this->primaryKey}" => $sortedIds
+            )
+        ));
+        
+        return $this->searchResultsResort($results, $sortedIds);
     }
 
 }

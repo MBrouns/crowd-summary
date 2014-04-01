@@ -12,13 +12,12 @@ class DocumentsController extends AppController {
      * Overview of all documents
      */
 
-    public function index() {        
+    public function index() {
         if (isset($this->request->data['Document']['file'])) {//file has been uploaded   
-            
-            if(!$this->validate_upload($this->request->data['Document']['file'])){
-               $this->redirect(array('controller' => 'documents', 'action' => 'index'));
-            }       
-            
+            if (!$this->validate_upload($this->request->data['Document']['file'])) {
+                $this->redirect(array('controller' => 'documents', 'action' => 'index'));
+            }
+
             //save document
             $this->request->data['Document']['title'] = $this->request->data['Document']['file']['name'];
             $this->request->data['Document']['fulltext'] = file_get_contents($this->request->data['Document']['file']['tmp_name']);
@@ -44,7 +43,14 @@ class DocumentsController extends AppController {
             }
         }
 
+        //search action
+        if (isset($this->request->data['Elastic']['query'])) {
+            $documents = $this->Document->search($this->request->data['Elastic']['query']);
+            $this->set('documents', $documents);
+        }
+
         //Load arguments for document list filter
+        /*
         if (isset($_POST["inputTitle"])) {
             $this->set('titleFilter', mysql_real_escape_string($_POST["inputTitle"]));
         } else {
@@ -59,29 +65,31 @@ class DocumentsController extends AppController {
             $this->set('contentFilter', mysql_real_escape_string($_POST["inputContent"]));
         } else {
             $this->set('contentFilter', '');
-        }
+        }*/
 
         //get all documents
-        $this->set('documents', $this->Document->find('all'));
+        if (!isset($documents)) {
+            $this->set('documents', $this->Document->find('all'));
+        }
     }
-    
+
     /*
      * Validate file upload
      * 
      * @param array file
      */
-    public function validate_upload($file){
-        if($file['type'] != 'text/plain'){
+
+    public function validate_upload($file) {
+        if ($file['type'] != 'text/plain') {
             $this->Session->setFlash(__('You can only upload plain text files'), 'flash_custom');
             return false;
         }
-        if(substr($file['name'], -4) != '.txt'){           
+        if (substr($file['name'], -4) != '.txt') {
             $this->Session->setFlash(__('You can only upload .txt files'), 'flash_custom');
             return false;
         }
-        
+
         return true;
-        
     }
 
     /*
@@ -152,7 +160,7 @@ class DocumentsController extends AppController {
         //see if user has personal summary
         $user = $this->Auth->user();
         $summary = $this->Summary->find('all', array('conditions' => array('Summary.user_id' => $user['id'], 'Sentence.document_id' => $this->Document->id)));
-        
+
         if (!empty($summary)) {//user has summary
             $this->set('personal_summary', $summary);
             $mode = 'personal';
