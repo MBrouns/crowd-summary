@@ -1,5 +1,6 @@
 <div class="container">    
     <div class="info form">
+        <br/>
         <div class="well">
             <h1 id="welcome">Information</h1>
             Please provide some information about the document you just uploaded.
