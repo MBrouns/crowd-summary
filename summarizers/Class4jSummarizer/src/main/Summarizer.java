@@ -91,8 +91,15 @@ public class Summarizer {
 			}
 
 			//Get fulltext as input for summarizer
-			PreparedStatement sqlSelectDocumentText = c
-					.prepareStatement("Select fulltext FROM documents WHERE id = ?;");
+			PreparedStatement sqlSelectDocumentText;
+			if(connectionType.toLowerCase().equals("mysql")){
+				sqlSelectDocumentText = c
+					.prepareStatement("Select `fulltext` FROM documents WHERE id = ?;");
+			}else{
+				sqlSelectDocumentText = c
+						.prepareStatement("Select fulltext FROM documents WHERE id = ?;");
+
+			}
 			sqlSelectDocumentText.setInt(1, docID);
 
 			ResultSet rs = sqlSelectDocumentText.executeQuery();
@@ -125,9 +132,17 @@ public class Summarizer {
 			
 			//Get fulltext for all documents for use in tf-idf calculation
 			List<String[]> allTerms = new ArrayList<String[]>();
-			PreparedStatement sqlGetAllDocFulltext = c
-					.prepareStatement(
-							"SELECT fulltext FROM documents WHERE id != ?;");
+			PreparedStatement sqlGetAllDocFulltext;
+			if(connectionType.toLowerCase().equals("mysql")){
+				sqlGetAllDocFulltext = c
+						.prepareStatement(
+								"SELECT `fulltext` FROM documents WHERE id != ?;");
+			}else{
+				sqlGetAllDocFulltext = c
+						.prepareStatement(
+								"SELECT fulltext FROM documents WHERE id != ?;");
+			}
+
 			sqlGetAllDocFulltext.setInt(1, docID);
 			ResultSet rsGetAllDocFullText = sqlGetAllDocFulltext.executeQuery();
 			
